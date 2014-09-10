@@ -9,13 +9,16 @@
                 <td>单位</td>
                 <td></td>
             </tr>
-            <!--<tr ng-repeat="product in products">-->
-                <!--<td>{{product.sort}}</td>-->
-                <!--<td>{{product.name}}</td>-->
-                <!--<td>{{product.price}}</td>-->
-                <!--<td>{{product.unit}}</td>-->
-                <!--<td><button type="button" class="btn btn-info" ng-click="add_to_shopping_cart(product.name)">加入购物车</button></td>-->
-            <!--</tr>-->
+            <% shops.forEach(function(shop,index){ %>
+            <tr>
+                <td><%= shop.category %></td>
+                <td><%= shop.name %></td>
+                <td><%= shop.unitPrice %></td>
+                <td><%= shop.unit %></td>
+                <td class="hidden"><%= shop.promotion %></td>
+                <td><a class="btn btn-primary addCart" type="button" href="#">加入购物车</a></td>
+            </tr>
+            <% })%>
         </table>
     </div>
 </div>
