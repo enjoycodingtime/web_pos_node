@@ -16,6 +16,10 @@ module.exports = function(app) {
             if(err){
                 shops = [];
             }
+            if(req.query.pay == "pay"){
+                req.session.total = 0;
+                req.session.cart = [];
+            }
             res.render('product_list',{
                 total:req.session.total,
                 shops:shops,
@@ -98,7 +102,7 @@ module.exports = function(app) {
         req.session.cart = shops;
 
         if(req.session.total == 0){
-            res.redirect('/shopList');
+            res.redirect('/product_list');
         }else{
             res.redirect('/shopping_cart');
         }
