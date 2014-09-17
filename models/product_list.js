@@ -1,8 +1,9 @@
 /**
  * Created by zk on 14-9-10.
  */
+
 var mongodb = require('./db');
-var _ = require('../public/javascripts/underscore-min.js');
+var _ = require('../public/underscore/underscore-min.js');
 
 function Product(){
 }

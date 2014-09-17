@@ -1,7 +1,7 @@
 <%- include header %>
     <div>
         <h1 style="text-align: center">商品列表</h1>
-        <table class="table table-bordered">
+        <table class="table table-bordered text-center ">
             <tr>
                 <td>分类</td>
                 <td>名称</td>
@@ -16,7 +16,7 @@
                 <td><%= shop.unitPrice %></td>
                 <td><%= shop.unit %></td>
                 <td class="hidden"><%= shop.promotion %></td>
-                <td><a class="btn btn-primary addCart" type="button" href="#">加入购物车</a></td>
+                <td><a class="btn btn-primary add_to_cart" type="button" href="#">加入购物车</a></td>
             </tr>
             <% })%>
         </table>

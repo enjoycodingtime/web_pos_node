@@ -9,18 +9,26 @@
             <td>数量</td>
             <td>小计</td>
         </tr>
-        <!--<tr ng-repeat="list in lists">-->
-            <!--<td>{{list.sort}}</td>-->
-            <!--<td>{{list.name}}</td>-->
-            <!--<td>{{list.price}}</td>-->
-            <!--<td>{{list.unit}}</td>-->
-            <!--<td><div class="btn-group">-->
-                    <!--<button type="button" class="btn btn-default" ng-click='lower_num(list.name)'>-</button>-->
-                    <!--<button type="button" class="btn btn-default" ng-disabled='true'>{{list.num}}</button>-->
-                    <!--<button type="button" class="btn btn-default" ng-click='add_num(list.name)'>+</button></td>-->
-
-            <!--<td><span ng-show='{{list.num >=3 &&check_cut(list.barcode)}} ' class="ng-hide">{{(list.num-filters(list.num/3))*(list.price)}}(原价：{{(list.num)*(list.price)}})</span><span  ng-show='{{list.num <3||!check_cut(list.barcode)}}' class="ng-hide">{{(list.num)*(list.price)}}</span></td>-->
-        <!--</tr>-->
+        <% var count = 0,subtotal = 0; shops.forEach(function(shop,index){%>
+        <tr>
+            <td><%= shop.category %></td>
+            <td><%= shop.name %></td>
+            <td><%= shop.unitPrice %></td>
+            <td><%= shop.unit %></td>
+            <td>
+                <div class="btn-group">
+                    <a type="button" class="btn btn-default" href="/lessOrMore?flag=less&shopName=<%= shop.name%>">-</a>
+                    <button class="btn btn-default"><%= shop.num %></button>
+                    <a type="button" class="btn btn-default" href="/lessOrMore?flag=more&shopName=<%= shop.name%>">+</a>
+                </div>
+            </td>
+            <% if(shop.promotion == "true"){ %>
+            <td><%= subtotal = (shop.num%3 +parseInt(shop.num/3)*2) * shop.unitPrice %>元(原价：<%= shop.num * shop.unitPrice%>元)</td>
+            <% }else{%>
+            <td><%= subtotal = shop.num * shop.unitPrice%>元</td>
+            <% } %>
+        </tr>
+        <% count += subtotal; }) %>
     </table>
     <div style="text-align: right">总计：{{count}} 元</div>
     <div style="text-align: right">
