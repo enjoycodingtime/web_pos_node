@@ -1,0 +1,52 @@
+<%- include header %>
+<div id="payment_page">
+    <div id="time"></div>
+    <h1>购物清单</h1>
+    <table class="table table-bordered">
+        <tr>
+            <td>分类</td>
+            <td>名称</td>
+            <td>单价（元）</td>
+            <td>单位</td>
+            <td>数量</td>
+            <td>小计</td>
+        </tr>
+
+    </table>
+    <h1>赠送商品</h1>
+    <table class="table table-bordered">
+        <tr>
+            <td>分类</td>
+            <td>名称</td>
+            <td>数量</td>
+        </tr>
+
+    </table>
+    <p></p>
+    <div style="text-align: right" >总计:{{count}}</div>
+    <div style="text-align: right" >节省:{{cuts}}</div>
+    <div style="text-align: right">
+        <button type="button" class="btn btn-info" ng-click='confirm()'>确认</button>
+    </div>
+</div>
+<script>
+    function time() {
+        var	dateDigitToString = function (num) {
+            return num < 10 ? '0' + num : num;
+        };
+        var currentDate = new Date(),
+                year = dateDigitToString(currentDate.getFullYear()),
+                month = dateDigitToString(currentDate.getMonth() + 1),
+                date = dateDigitToString(currentDate.getDate()),
+                hour = dateDigitToString(currentDate.getHours()),
+                minute = dateDigitToString(currentDate.getMinutes()),
+                second = dateDigitToString(currentDate.getSeconds()),
+                formattedDateString = year + '年' + month + '月' + date + '日 ' + hour + ':' + minute + ':' + second;
+        $('#time').text(formattedDateString) ;
+    }
+    $(function(){
+        time();
+          });
+</script>
+
+<%- include footer%>

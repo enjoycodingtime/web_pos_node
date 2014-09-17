@@ -30,9 +30,9 @@
         </tr>
         <% count += subtotal; }) %>
     </table>
-    <div style="text-align: right">总计：{{count}} 元</div>
-    <div style="text-align: right">
-        <button type="button" class="btn btn-info" ng-click='pay()'>付款</button>
+    <div class="count">
+        <span>总计：<%= count %></span>
+        <a class="btn btn-primary" href="/payment">付款</a>
     </div>
 </div>
 </div>

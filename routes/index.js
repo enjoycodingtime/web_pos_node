@@ -1,6 +1,5 @@
 var Product = require('../models/product_list.js');
 var _ = require('../models/underscore-min.js');
-
 module.exports = function(app) {
     app.get('/', function (req, res) {
         if(!req.session.cart){
@@ -34,6 +33,18 @@ module.exports = function(app) {
             total:req.session.total,
             shops:req.session.cart
         });
+
+    });
+
+    app.get('/payment',function(req,res){
+
+        res.render('payment',{ title: 'web_pos',product_active:"",
+            home_active:'',
+            shopping_cart_active:'active',
+            total:req.session.total,
+            shops:req.session.cart,
+
+        });
     });
     app.post('/addToCart',function(req,res){
         console.log("hello");
@@ -54,5 +65,32 @@ module.exports = function(app) {
         res.writeHead(200,{'Content-type':'text/plain'});
         res.write(total + "");
         res.end();
+    });
+
+    app.get('/lessOrMore',function(req,res){
+        var shops = req.session.cart;
+        var shop = _.findWhere(shops,{name:req.query.shopName});
+        var index = _.indexOf(shops,shop);
+
+        if(req.query.flag == "less"){
+            shop.num = shop.num - 1;
+            if(shop.num == 0){
+                shops.splice(index,1);
+            }else{
+                shops[index] = shop;
+            }
+            req.session.total = req.session.total - 1;
+        }else if(req.query.flag == "more"){
+            shop.num = shop.num + 1;
+            shops[index] = shop;
+            req.session.total = req.session.total + 1;
+        }
+        req.session.cart = shops;
+
+        if(req.session.total == 0){
+            res.redirect('/shopList');
+        }else{
+            res.redirect('/shopping_cart');
+        }
     });
 };
