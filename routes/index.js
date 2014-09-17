@@ -37,12 +37,22 @@ module.exports = function(app) {
     });
 
     app.get('/payment',function(req,res){
+        var shops = req.session.cart;
+        var gives = [];
+        _.each(shops,function(shop){
+            if(shop.promotion == "true" && shop.num >= 3){
+                var give = _.clone(shop);
+                give.num = parseInt(give.num/3);
+                gives.push(give);
+            }
+        });
 
         res.render('payment',{ title: 'web_pos',product_active:"",
             home_active:'',
             shopping_cart_active:'active',
             total:req.session.total,
-            shops:req.session.cart,
+            shops:shops,
+            gives:gives
 
         });
     });
