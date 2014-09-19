@@ -73,7 +73,13 @@ module.exports = function(app) {
     });
     app.get('/product_detail',function(req,res){
 
-        res.render('product_detail')
+        res.render('product_detail');
+    });
+    app.get('/add_property',function(req,res){
+       res.render('add_property');
+    });
+    app.get('/delete_product_property',function(req,res){
+       res.render('delete_product_property',{current_product:'苹果'})
     });
 
     app.post('/addToCart',function(req,res){

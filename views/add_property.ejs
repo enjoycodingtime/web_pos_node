@@ -1,0 +1,38 @@
+<%- include admin_header.ejs%>
+<div>
+    <a>商品信息管理</a>>><a>添加商品</a>>>添加属性
+</div>
+<div class="mainBlock text-center">
+
+    <table class="table">
+        <tr>
+            <td>
+                属性名：
+            </td>
+            <td>
+                <input type="text"  id="propertnay_name" placeholder="请输入属性名" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                属性值：
+            </td>
+            <td>
+                <input type="text"  id="property_value" placeholder="请输入属性值" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a type="button" class="btn btn-default" href="add_product">保存</a>
+            </td>
+            <td>
+                <a type="button" class="btn btn-default" href="add_product">取消</a>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+
+<%- include admin_footer.ejs%>
