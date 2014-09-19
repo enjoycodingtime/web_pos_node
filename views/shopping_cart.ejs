@@ -23,7 +23,9 @@
                 </div>
             </td>
             <% if(shop.promotion == "true"){ %>
-            <td><%= subtotal = (shop.num%3 +parseInt(shop.num/3)*2) * shop.unitPrice %>元(原价：<%= shop.num * shop.unitPrice%>元)</td>
+            <td><%= subtotal = (shop.num%3 +parseInt(shop.num/3)*2) * shop.unitPrice %>元
+                <%if(shop.num > 2){%>
+                (原价：<%= shop.num * shop.unitPrice%>元) <% } %></td>
             <% }else{%>
             <td><%= subtotal = shop.num * shop.unitPrice%>元</td>
             <% } %>

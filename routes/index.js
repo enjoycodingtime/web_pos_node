@@ -50,18 +50,19 @@ module.exports = function(app) {
                 gives.push(give);
             }
         });
-
-        res.render('payment',{ title: 'web_pos',product_active:"",
+        console.log(req.session.total+"-------------------------------------");
+        res.render('payment',{ title: 'web_pos',
+            total:req.session.total,
+            product_active:'',
             home_active:'',
             shopping_cart_active:'active',
-            total:req.session.total,
             shops:shops,
             gives:gives
 
         });
     });
     app.post('/addToCart',function(req,res){
-        console.log("hello");
+
         var shop = req.body.shop;
         var cart = req.session.cart;
         var hadShop = _.findWhere(cart,{name:shop.name});

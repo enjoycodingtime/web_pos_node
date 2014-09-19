@@ -11,7 +11,7 @@
             <td>数量</td>
             <td>小计</td>
         </tr>
-        <% var count = 0,subtotal = 0;shops.forEach(function(shop,index){%>
+        <% var count = 0,total1 = 0;shops.forEach(function(shop,index){%>
         <tr>
             <td><%= shop.category %></td>
             <td><%= shop.name %></td>
@@ -19,12 +19,14 @@
             <td><%= shop.unit %></td>
             <td><%= shop.num %></td>
             <% if(shop.promotion == "true"){ %>
-            <td><%= subtotal = (shop.num%3 +parseInt(shop.num/3)*2) * shop.unitPrice %>元(原价：<%= shop.num * shop.unitPrice%>元)</td>
+            <td><%= total1 = (shop.num%3 +parseInt(shop.num/3)*2) * shop.unitPrice %>元
+                <%if(shop.num > 2){%>
+                (原价：<%= shop.num * shop.unitPrice%>元) <% } %></td>
             <% }else{%>
-            <td><%= subtotal = shop.num * shop.unitPrice%>元</td>
+            <td><%= total1 = shop.num * shop.unitPrice%>元</td>
             <% } %>
         </tr>
-        <% count += subtotal; }) %>
+        <% count += total1; }) %>
     </table>
     <h1>赠送商品</h1>
     <table class="table table-bordered">
