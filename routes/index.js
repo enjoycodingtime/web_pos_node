@@ -71,6 +71,10 @@ module.exports = function(app) {
 
         res.render('add_product');
     });
+    app.get('/product_detail',function(req,res){
+
+        res.render('product_detail')
+    });
 
     app.post('/addToCart',function(req,res){
 
