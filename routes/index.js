@@ -61,6 +61,17 @@ module.exports = function(app) {
 
         });
     });
+
+    app.get('/admin',function(req,res){
+
+        res.render('admin');
+    });
+
+    app.get('/add_product',function(req,res){
+
+        res.render('add_product');
+    });
+
     app.post('/addToCart',function(req,res){
 
         var shop = req.body.shop;

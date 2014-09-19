@@ -1,0 +1,48 @@
+<%- include admin_header %>
+<div class="mainBlock">
+    <div class="row">
+        <div class="col-md-3"><button type="button" class="btn btn-default">保存商品</button></div>
+        <div class="col-md-3"><button type="button" class="btn btn-default">添加属性</button></div>
+        <div class="col-md-3"><button type="button" class="btn btn-default">删除属性</button></div>
+        <div class="col-md-3"><button type="button" class="btn btn-default">取消</button></div>
+    </div>
+
+    <div>
+        <form class="form-horizontal" role="form">
+            <table class="table">
+                <tr>
+                    <td>
+                        商品名称：
+                        </td>
+                    <td>
+                        <input type="text"  id="product_mame" placeholder="请输入商品名称" size="20">
+                    </td>
+                    <td>
+                        商品数量：</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default">-</button>
+                            <button type="button" class="btn btn-default"><span>0</span></button>
+                            <button type="button" class="btn btn-default">+</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        单价（元）：</td>
+                    <td>
+                        <input type="text"  id="product_mame" placeholder="请输入单价" size="20">
+                    </td>
+                    <td>
+                        单位：</td>
+                    <td>
+                        <input type="text" id="product_number" placeholder="请输入单位" size="20">
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+
+</div>
+<%- include admin_footer%>
