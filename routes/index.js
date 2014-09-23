@@ -1,5 +1,7 @@
 var Product = require('../models/product_list.js');
 var _ = require('../models/underscore-min.js');
+var Time = require('../models/Time.js');
+
 module.exports = function(app) {
     app.get('/', function (req, res) {
         if(!req.session.cart){
@@ -75,6 +77,26 @@ module.exports = function(app) {
     app.get('/add_product',function(req,res){
 
         res.render('add_product');
+    });
+    app.post('/add_product',function(req,res){
+
+        var current_time = new Time();
+        var category = "未分类";
+        var product = new Product({
+            category:category,
+            name:req.body.product_name,
+            number:req.body.product_number,
+            unitPrice:req.body.product_price,
+            unit:req.body.product_unit,
+            publish_time:current_time.get_time()
+        });
+        product.save(function (err) {
+            if(err){
+                return res.redirect('/add_product');
+            }
+            res.redirect('/admin');
+        })
+
     });
     app.get('/product_detail',function(req,res){
         var product_name = req.query.product_name;
