@@ -63,8 +63,13 @@ module.exports = function(app) {
     });
 
     app.get('/admin',function(req,res){
-
-        res.render('admin');
+        Product.get(function(err,shoppings){
+            var shops = shoppings;
+            if(err){
+                shops = [];
+            }
+        res.render('admin',{shops:shops});
+        });
     });
 
     app.get('/add_product',function(req,res){
@@ -72,6 +77,7 @@ module.exports = function(app) {
         res.render('add_product');
     });
     app.get('/product_detail',function(req,res){
+        var product_name = req.query.product_name;
 
         res.render('product_detail');
     });

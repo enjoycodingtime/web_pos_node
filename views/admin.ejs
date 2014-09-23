@@ -12,6 +12,18 @@
             <td>发布时间</td>
             <td>操作</td>
         </tr>
+        <% shops.forEach(function(shop,index){ %>
+        <tr>
+
+            <td><%= index %></td>
+            <td><%= shop.name %></td>
+            <td><%= shop.number %></td>
+            <td><%= shop.unitPrice %></td>
+            <td><%= shop.unit %></td>
+            <td><%= shop.public_time %></td>
+            <td><a href="product_detail?product_name=<%= shop.name %>">详情</a>  <a href="delete_product">删除</a></td>
+        </tr>
+        <% })%>
     </table>
 </div>
 <%- include admin_footer%>
