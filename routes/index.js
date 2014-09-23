@@ -78,8 +78,15 @@ module.exports = function(app) {
     });
     app.get('/product_detail',function(req,res){
         var product_name = req.query.product_name;
+        Product.get(function(err,shoppings){
+            var shops = shoppings;
+            if(err){
+                shops = [];
+            }
+            var this_product = _(shops).findWhere({name:product_name});
 
-        res.render('product_detail');
+        res.render('product_detail',{this_product:this_product});
+        });
     });
     app.get('/add_property',function(req,res){
        res.render('add_property');
