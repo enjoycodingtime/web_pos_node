@@ -21,7 +21,7 @@
             <td><%= shop.unitPrice %></td>
             <td><%= shop.unit %></td>
             <td><%= shop.publish_time %></td>
-            <td><a href="product_detail?product_name=<%= shop.name %>">详情</a>  <a href="delete_product">删除</a></td>
+            <td><a href="product_detail?product_name=<%= shop.name %>">详情</a>  <a href="delete_product?product_name=<%= shop.name %>">删除</a></td>
         </tr>
         <% })%>
     </table>

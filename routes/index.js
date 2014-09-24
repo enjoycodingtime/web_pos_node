@@ -1,6 +1,7 @@
 var Product = require('../models/product_list.js');
 var _ = require('../models/underscore-min.js');
 var Time = require('../models/Time.js');
+var Post = require('../models/Post.js');
 
 module.exports = function(app) {
     app.get('/', function (req, res) {
@@ -109,6 +110,19 @@ module.exports = function(app) {
 
         res.render('product_detail',{this_product:this_product});
         });
+    });
+    app.get('/delete_product',function(req,res){
+        var post = new Post();
+        var product_name = req.query.product_name;
+        post.remove(product_name, function (err) {
+            if (err) {
+
+                return res.redirect('/admin');
+            }
+
+            res.redirect('/admin');
+        });
+//        res.redirect('/admin');
     });
     app.get('/add_property',function(req,res){
        res.render('add_property');
