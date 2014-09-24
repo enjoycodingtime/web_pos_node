@@ -3,9 +3,9 @@
 
 
     <div>
-        <form class="form-horizontal" role="form" method="post">
+        <form class="form-horizontal" role="form" method="post" name = 'add_product'>
             <div class="row">
-                <div class="col-md-3"><input type="submit"  class="btn btn-default" value="保存商品"/></div>
+                <div class="col-md-3"><input type="submit"  class="btn btn-default" value="保存商品" onclick="return check()"/></div>
                 <div class="col-md-3"><button type="button" class="btn btn-default">添加属性</button></div>
                 <div class="col-md-3"><button type="button" class="btn btn-default">删除属性</button></div>
                 <div class="col-md-3"><button type="button" class="btn btn-default">取消</button></div>
@@ -51,9 +51,25 @@
                     </td>
                 </tr>
             </table>
+            <script>
+                function check() {
+                    var current_from  = document.add_product;
+                    if(current_from.product_name.value == '' ||
+                            current_from.category.value == '' ||
+                            current_from.product_number.value == 0 ||
+                            current_from.product_price.value == '' ||
+                            current_from.product_unit.value == '' ){
+                        alert("输入有误,请确认!");
+                        return false;
+                    }
+                    current_from.submit();
+
+                }
+            </script>
 
         </form>
     </div>
+
 
 </div>
 <%- include admin_footer%>
