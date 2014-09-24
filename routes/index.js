@@ -82,9 +82,8 @@ module.exports = function(app) {
     app.post('/add_product',function(req,res){
 
         var current_time = new Time();
-        var category = "未分类";
         var product = new Product({
-            category:category,
+            category:req.body.category,
             name:req.body.product_name,
             number:req.body.product_number,
             unitPrice:req.body.product_price,
@@ -114,6 +113,7 @@ module.exports = function(app) {
     app.get('/delete_product',function(req,res){
         var post = new Post();
         var product_name = req.query.product_name;
+
         post.remove(product_name, function (err) {
             if (err) {
 
@@ -122,7 +122,6 @@ module.exports = function(app) {
 
             res.redirect('/admin');
         });
-//        res.redirect('/admin');
     });
     app.get('/add_property',function(req,res){
        res.render('add_property');

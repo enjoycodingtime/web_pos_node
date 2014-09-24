@@ -8,8 +8,9 @@ function Post(){
     
 };
 Post.prototype.remove = function (name,callback) {
+
     mongodb.close();
-    console.log("11111111111111111111111111111111111lcoase");
+
     mongodb.open(function (err, db) {
         if (err) {
 
@@ -20,7 +21,8 @@ Post.prototype.remove = function (name,callback) {
             if (err) {
                 mongodb.close();
                 return callback(err);
-            }
+            };
+
             collection.remove({
                 "name": name
             }, {
