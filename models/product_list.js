@@ -75,3 +75,6 @@ Product.prototype.save = function(callback){
         });
     });
 };
+Product.prototype.add_property = function(property_name,property_value,callback){
+
+}

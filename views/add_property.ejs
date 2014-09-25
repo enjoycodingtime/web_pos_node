@@ -1,16 +1,16 @@
 <%- include admin_header.ejs%>
 <div>
-    <a>商品信息管理</a>>><a>添加商品</a>>>添加属性
+    <a href="admin">商品信息管理</a>>><a href="add_product">添加商品</a>>>添加属性
 </div>
 <div class="mainBlock text-center">
-
+<form class="form-horizontal" role="form" method="post" name = 'add_property'>
     <table class="table">
         <tr>
             <td>
                 属性名：
             </td>
             <td>
-                <input type="text"  id="propertnay_name" placeholder="请输入属性名" size="20">
+                <input type="text"  name="property_name" placeholder="请输入属性名" size="20">
             </td>
         </tr>
         <tr>
@@ -18,18 +18,20 @@
                 属性值：
             </td>
             <td>
-                <input type="text"  id="property_value" placeholder="请输入属性值" size="20">
+                <input type="text"  name="property_value" placeholder="请输入属性值" size="20">
             </td>
         </tr>
         <tr>
             <td>
-                <a type="button" class="btn btn-default" href="add_product">保存</a>
+                <input type="submit"  class="btn btn-default"  value="保存">
             </td>
             <td>
                 <a type="button" class="btn btn-default" href="add_product">取消</a>
             </td>
         </tr>
     </table>
+</form>
+
 
 </div>
 

@@ -1,6 +1,6 @@
 <%- include admin_header.ejs%>
 <div>
-    <a>商品管理</a>>><a><%= current_product %></a>>>添加属性
+    <a href="admin">商品管理</a>>><a href="add_product">添加商品</a>>>删除属性
 </div>
 <div class="mainBlock text-center">
 
@@ -16,6 +16,16 @@
                 操作
             </td>
         </tr>
+
+            <% try{%>
+            <% propertys.forEach(function(property,index){ %>
+        <tr>
+            <td><%= property.name %></td>
+            <td><input type="text" name="<%= property.name %>" size="20" value="<%= property.value %>"> </td>
+            <td><a href="delete_property?property_name=<%= property.name %>">删除</a></td>
+        </tr>
+            <% })%><% }catch (err){}%>
+
         
     </table>
 

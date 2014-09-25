@@ -53,7 +53,6 @@ module.exports = function(app) {
                 gives.push(give);
             }
         });
-        console.log(req.session.total+"-------------------------------------");
         res.render('payment',{ title: 'web_pos',
             total:req.session.total,
             product_active:'',
@@ -126,8 +125,27 @@ module.exports = function(app) {
     app.get('/add_property',function(req,res){
        res.render('add_property');
     });
+    app.post('/add_property',function(req,res){
+
+        var session_property =req.session.property;
+        var property = {
+            name:req.body.property_name,
+            value:req.body.property_value
+        };
+        session_property.push(property);
+        req.session.property = session_property;
+        res.render('add_product',{new_property:session_property})
+    });
     app.get('/delete_product_property',function(req,res){
-       res.render('delete_product_property',{current_product:'苹果'})
+       res.render('delete_product_property',{propertys:req.session.property})
+    });
+    app.get('/delete_property',function(req,res){
+       var property_name = req.query.property_name;
+        var session_property = req.session.property;
+         var sub =_.indexOf(session_property,_.findWhere(session_property,{name:property_name}));
+         session_property.splice(sub,1);
+        req.session.property = session_property;
+        res.render('add_product',{new_property:session_property});
     });
 
     app.post('/addToCart',function(req,res){

@@ -6,9 +6,9 @@
         <form class="form-horizontal" role="form" method="post" name = 'add_product'>
             <div class="row">
                 <div class="col-md-3"><input type="submit"  class="btn btn-default" value="保存商品" onclick="return check()"/></div>
-                <div class="col-md-3"><button type="button" class="btn btn-default">添加属性</button></div>
-                <div class="col-md-3"><button type="button" class="btn btn-default">删除属性</button></div>
-                <div class="col-md-3"><button type="button" class="btn btn-default">取消</button></div>
+                <div class="col-md-3"><a type="button" class="btn btn-default" href="add_property">添加属性</a></div>
+                <div class="col-md-3"><a type="button" class="btn btn-default" href="delete_product_property">删除属性</a></div>
+                <div class="col-md-3"><a type="button" class="btn btn-default" href="admin">取消</a></div>
             </div>
             <table class="table">
                 <tr>
@@ -41,7 +41,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>分类：
+                    <td>分类：</td>
+                    <td>
                         <select name="category">
                             <option value="饮料">饮料</option>
                             <option value="水果">水果</option>
@@ -49,7 +50,13 @@
                             <option value="食品">食品</option>
                         </select>
                     </td>
+                    <% try{%>
+                    <% new_property.forEach(function(property,index){ %>
+                    <td><%= property.name %></td><td><input type="text" name="<%= property.name %>" size="20" value="<%= property.value %>"> </td>
+                    <% if(index %2 ==0){%></tr><tr><% }%>
+                    <% })%><% }catch (err){}%>
                 </tr>
+
             </table>
             <script>
                 function check() {
