@@ -76,7 +76,7 @@ module.exports = function(app) {
 
     app.get('/add_product',function(req,res){
 
-        res.render('add_product');
+        res.render('add_product',{new_property:req.session.property});
     });
     app.post('/add_product',function(req,res){
 
@@ -89,7 +89,8 @@ module.exports = function(app) {
             unit:req.body.product_unit,
             publish_time:current_time.get_time()
         });
-        product.save(function (err) {
+
+        product.save(req.session.property,function (err) {
             if(err){
                 return res.redirect('/add_product');
             }
@@ -134,18 +135,19 @@ module.exports = function(app) {
         };
         session_property.push(property);
         req.session.property = session_property;
-        res.render('add_product',{new_property:session_property})
+        res.redirect('/add_product');
     });
     app.get('/delete_product_property',function(req,res){
        res.render('delete_product_property',{propertys:req.session.property})
     });
     app.get('/delete_property',function(req,res){
+
        var property_name = req.query.property_name;
         var session_property = req.session.property;
          var sub =_.indexOf(session_property,_.findWhere(session_property,{name:property_name}));
          session_property.splice(sub,1);
         req.session.property = session_property;
-        res.render('add_product',{new_property:session_property});
+        res.redirect('/add_product');
     });
 
     app.post('/addToCart',function(req,res){

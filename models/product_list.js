@@ -41,7 +41,7 @@ Product.get = function(back){
 };
 
 //存入商品信息
-Product.prototype.save = function(callback){
+Product.prototype.save = function(property,callback){
     //要存入数据库的商品
     var product = {
         category:this.category,
@@ -51,6 +51,12 @@ Product.prototype.save = function(callback){
         unit:this.unit,
         publish_time:this.publish_time
     };
+    if(property.length !=0){
+        property.forEach(function(pro){
+           product[pro.name] = pro.value;
+        });
+
+    }
     //打开数据库
     mongodb.open(function(err,db){
         if(err){
@@ -75,6 +81,4 @@ Product.prototype.save = function(callback){
         });
     });
 };
-Product.prototype.add_property = function(property_name,property_value,callback){
 
-}
