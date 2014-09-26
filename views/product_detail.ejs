@@ -11,40 +11,11 @@
         <form class="form-horizontal" role="form">
             <table class="table">
                 <tr>
-                    <td>
-                        商品名称：
-                    </td>
-                    <td>
-                        <input type="text"  id="product_mame" placeholder="" size="20" value="<%= this_product.name%>">
-                    </td>
-                    <td>
-                        商品数量：</td>
-                    <td>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default">-</button>
-                            <button type="button" class="btn btn-default"><span><%= this_product.number%></span></button>
-                            <button type="button" class="btn btn-default">+</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        单价（元）：</td>
-                    <td>
-                        <input type="text"  id="product_price" placeholder="" size="20" value="<%= this_product.unitPrice%>">
-                    </td>
-                    <td>
-                        单位：</td>
-                    <td>
-                        <input type="text" id="product_unit" placeholder="" size="20" value="<%= this_product.unit%>">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        生产日期：</td>
-                    <td>
-                        <input type="text" id="production_date" placeholder="" size="20" value="<%= this_product.publish_time%>">
-                    </td>
+                    <% var sum =0;for (value in this_product){
+                    if(sum != 0){%>
+                    <td><%= value%></td><td><input type="text" name="<%= value%>" size="20" value="<%= this_product[value] %>"> </td>
+                    <% if(sum %2 ==0){%></tr><tr><% }%>
+                    <% }sum +=1}%>
                 </tr>
             </table>
 
