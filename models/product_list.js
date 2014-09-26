@@ -52,10 +52,9 @@ Product.prototype.save = function(property,callback){
         publish_time:this.publish_time
     };
     if(property.length !=0){
-        property.forEach(function(pro){
-           product[pro.name] = pro.value;
-        });
-
+        for (value in property){
+            product[value] = property[value];
+        }
     }
     //打开数据库
     mongodb.open(function(err,db){

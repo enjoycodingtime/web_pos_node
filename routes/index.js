@@ -89,8 +89,14 @@ module.exports = function(app) {
             unit:req.body.product_unit,
             publish_time:current_time.get_time()
         });
-
-        product.save(req.session.property,function (err) {
+        var properties = req.session.property;
+        var added_property = {};
+        if(properties.length !=0){
+            properties.forEach(function(value){
+                added_property[value.name] = req.body[value.name];
+            });
+        }
+        product.save(added_property,function (err) {
             if(err){
                 return res.redirect('/add_product');
             }
