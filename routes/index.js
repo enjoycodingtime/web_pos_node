@@ -122,15 +122,6 @@ module.exports = function(app) {
 
     app.post('/product_detail',function(req,res){
 
-//        var current_time = new Time();
-//        var product = new Product({
-//            category:req.body.category,
-//            name:req.body.name,
-//            number:req.body.number,
-//            unitPrice:req.body.unitPrice,
-//            unit:req.body.unit,
-//            publish_time:current_time.get_time()
-//        });
         var object = req.body;
         var property = new Property();
         var properties = req.session.detail_property;
@@ -141,13 +132,49 @@ module.exports = function(app) {
             });
         }
 
-        property.update(object,req.body.name,added_property,function (err) {
+        property.update(object,req.session.current_product,added_property,function (err) {
             if(err){
                 return res.redirect('/product_detail');
             }
             res.redirect('/admin');
         })
 
+    });
+
+    app.get('/delete_detail_property',function(req,res){
+        var product_name = req.query.product_name || req.session.current_product;
+        Product.get(function(err,shoppings){
+            var shops = shoppings;
+            if(err){
+                shops = [];
+            }
+            var this_product = _(shops).findWhere({name:product_name});
+            req.session.current_product = product_name;
+            res.render('delete_detail_property',{this_product:this_product,product_name:product_name});
+        });
+    });
+
+    app.get('/delete_this_property',function(req,res){
+        var product_name = req.query.product_name;
+        var property_name = req.query.name;
+        var added_property = [];
+        req.session.current_product = product_name;
+        console.log(product_name+'++++++++++'+property_name+'+++++++++===');
+        Product.get(function(err,shoppings){
+            var shops = shoppings;
+            if(err){
+                shops = [];
+            }
+            var this_product = _(shops).findWhere({name:product_name});
+            var new_product = _(this_product).omit(property_name);
+            var property = new Property();
+            property.update(new_product,product_name,added_property,function (err) {
+                if(err){
+                    return res.redirect('/delete_this_property');
+                }
+                res.redirect('/delete_detail_property');
+            })
+        });
     });
 
     app.get('/delete_product',function(req,res){
