@@ -18,6 +18,7 @@ function Product(product){
 module.exports = Product;
 
 Product.get = function(back){
+    mongodb.close();
     mongodb.open(function(err,db){
         if(err){
             return back(err);
@@ -80,4 +81,45 @@ Product.prototype.save = function(property,callback){
         });
     });
 };
+//更新数据
+Product.prototype.update = function(name,property,callback){
+    //要存入数据库的商品
+    var product = {
+        category:this.category,
+        name:this.name,
+        number:this.number,
+        unitPrice:this.unitPrice,
+        unit:this.unit,
+        publish_time:this.publish_time
+    };
+    if(property.length !=0){
+        for (value in property){
+            product[value] = property[value];
+        }
+    }
+    //打开数据库
+    mongodb.open(function(err,db){
+        if(err){
+            return callback(err);
+        }
+
+        db.collection('shops',function(err,collection){
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            collection.update({'name':name
+                },product,function(err){
+                mongodb.close();
+                if(err){
+                    return callback(err);
+                }
+                callback(null);
+            });
+        });
+    });
+};
+
+
+
 

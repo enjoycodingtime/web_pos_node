@@ -1,4 +1,5 @@
 var Product = require('../models/product_list.js');
+var Property = require('../models/Property.js');
 var _ = require('../models/underscore-min.js');
 var Time = require('../models/Time.js');
 var Post = require('../models/Post.js');
@@ -65,6 +66,7 @@ module.exports = function(app) {
     });
 
     app.get('/admin',function(req,res){
+        req.session.detail_property = [];
         Product.get(function(err,shoppings){
             var shops = shoppings;
             if(err){
@@ -105,17 +107,49 @@ module.exports = function(app) {
 
     });
     app.get('/product_detail',function(req,res){
-        var product_name = req.query.product_name;
+
+        var product_name = req.query.product_name || req.session.current_product;
         Product.get(function(err,shoppings){
             var shops = shoppings;
             if(err){
                 shops = [];
             }
             var this_product = _(shops).findWhere({name:product_name});
-
-        res.render('product_detail',{this_product:this_product});
+        req.session.current_product = product_name;
+        res.render('product_detail',{this_product:this_product,new_property:req.session.detail_property});
         });
     });
+
+    app.post('/product_detail',function(req,res){
+
+//        var current_time = new Time();
+//        var product = new Product({
+//            category:req.body.category,
+//            name:req.body.name,
+//            number:req.body.number,
+//            unitPrice:req.body.unitPrice,
+//            unit:req.body.unit,
+//            publish_time:current_time.get_time()
+//        });
+        var object = req.body;
+        var property = new Property();
+        var properties = req.session.detail_property;
+        var added_property = {};
+        if(properties.length !=0){
+            properties.forEach(function(value){
+                added_property[value.name] = req.body[value.name];
+            });
+        }
+
+        property.update(object,req.body.name,added_property,function (err) {
+            if(err){
+                return res.redirect('/product_detail');
+            }
+            res.redirect('/admin');
+        })
+
+    });
+
     app.get('/delete_product',function(req,res){
         var post = new Post();
         var product_name = req.query.product_name;
@@ -143,6 +177,23 @@ module.exports = function(app) {
         req.session.property = session_property;
         res.redirect('/add_product');
     });
+
+    app.get('/detail_add_property',function(req,res){
+        var product_name = req.query.name;
+       res.render('detail_add_property',{name:product_name})
+    });
+    app.post('/detail_add_property',function(req,res){
+        var session_property =req.session.detail_property ||[];
+        var property = {
+            name:req.body.property_name,
+            value:req.body.property_value
+        };
+        session_property.push(property);
+        req.session.detail_property = session_property = session_property;
+
+        res.redirect('/product_detail')
+    });
+
     app.get('/delete_product_property',function(req,res){
        res.render('delete_product_property',{propertys:req.session.property})
     });
