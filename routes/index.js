@@ -281,4 +281,28 @@ module.exports = function(app) {
             res.redirect('/shopping_cart');
         }
     });
+
+    app.get('/admin_lessOrMore',function(req,res){
+        var product_name = req.query.shopName;
+        var product_number = parseInt(req.query.number);
+        if(req.query.flag == 'less' && product_number !=0){
+            Product.update_number(product_name,'less',product_number,function(err){
+                if (err) {
+                    return res.redirect('/admin');
+                }
+                res.redirect('/admin');
+            });
+        }
+        if(req.query.flag == 'more'){
+            Product.update_number(product_name,'More',product_number,function(err){
+                if (err) {
+                    return res.redirect('/admin');
+                }
+                res.redirect('/admin');
+            })
+        }
+
+
+    });
 };
+

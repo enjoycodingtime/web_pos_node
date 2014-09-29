@@ -41,6 +41,45 @@ Product.get = function(back){
     });
 };
 
+Product.update_number = function(product_name,lessOrMore,number,back){
+    var product_number = number;
+    console.log('product_number'+"======================="+product_number+'product_name'+"=========================="+product_name);
+    mongodb.open(function(err,db){
+      if(err){
+          return back(err);
+      }
+      db.collection('shops',function(err,collection){
+          if(err){
+              mongodb.close();
+              return back(err);
+          };
+
+          if(lessOrMore == 'less'){
+              product_number -=1;
+              collection.update({'name':product_name},{$set:{'number':product_number}},
+                  function(err){
+                  mongodb.close();
+                  if(err){
+                      return back(err);
+                  }
+                  back(null);
+              });
+
+          }else{
+              product_number +=1;
+              collection.update({'name':product_name},{$set:{'number':product_number}},
+                  function(err){
+                      mongodb.close();
+                      if(err){
+                          return back(err);
+                      }
+                      back(null);
+                  });
+          }
+      })
+  })
+};
+
 //存入商品信息
 Product.prototype.save = function(property,callback){
     //要存入数据库的商品
