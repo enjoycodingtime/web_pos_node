@@ -3,6 +3,7 @@
  */
 
 var mongodb = require('./db');
+var markdown = require('markdown').markdown;
 var _ = require('../public/underscore/underscore-min.js');
 
 function Product(product){
@@ -17,6 +18,43 @@ function Product(product){
 
 module.exports = Product;
 
+Product.getTen = function(name,page,back){
+
+    mongodb.close();
+    mongodb.open(function(err,db){
+        if(err){
+            return back(err);
+        }
+        db.collection('shops',function(err,collection){
+            if(err){
+                mongodb.close();
+                return back(err);
+            }
+            var query = {};
+            if (name) {
+                query.name = name;
+            }
+            collection.count(query, function (err, total) {
+
+                //根据 query 对象查询，并跳过前 (page-1)*10 个结果，返回之后的 10 个结果
+                collection.find(query, {
+                    skip: (page - 1)*10,
+                    limit: 10
+                }).sort({
+                    time: -1
+                }).toArray(function (err, shops) {
+                    mongodb.close();
+                    if (err) {
+                        return back(err);
+                    }
+                    console.log('tessssssssssssssssst');
+
+                    back(null, shops, total);
+                });
+            });
+        });
+    });
+};
 Product.get = function(back){
     mongodb.close();
     mongodb.open(function(err,db){
@@ -41,9 +79,9 @@ Product.get = function(back){
     });
 };
 
+
 Product.update_number = function(product_name,lessOrMore,number,back){
     var product_number = number;
-    console.log('product_number'+"======================="+product_number+'product_name'+"=========================="+product_name);
     mongodb.open(function(err,db){
       if(err){
           return back(err);

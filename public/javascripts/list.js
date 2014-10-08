@@ -22,4 +22,5 @@ $(function(){
             $('#cart_num').text(data);
         });
     });
+
 });

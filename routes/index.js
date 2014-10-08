@@ -66,13 +66,20 @@ module.exports = function(app) {
     });
 
     app.get('/admin',function(req,res){
+
         req.session.detail_property = [];
-        Product.get(function(err,shoppings){
+        var page = req.query.p ? parseInt(req.query.p) : 1;
+        //查询并返回第 page 页的 10 篇文章
+        Product.getTen(null, page, function (err, shoppings, total) {
             var shops = shoppings;
-            if(err){
+            if (err) {
                 shops = [];
             }
-        res.render('admin',{shops:shops});
+
+        res.render('admin',{shops:shops,
+            page: page,
+            isFirstPage: (page - 1) == 0,
+            isLastPage: ((page - 1) * 10 + shops.length) == total});
         });
     });
 
