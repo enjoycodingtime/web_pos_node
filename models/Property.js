@@ -10,7 +10,7 @@ function Property(){
 
 module.exports = Property;
 
-Property.prototype.update = function(product,name,property,callback){
+Property.prototype.update = function(product,id,property,callback){
     //要存入数据库的商品
 
     if(property.length !=0){
@@ -29,7 +29,7 @@ Property.prototype.update = function(product,name,property,callback){
                 mongodb.close();
                 return callback(err);
             }
-            collection.update({'name':name
+            collection.update({'_id':id
             },product,function(err){
                 mongodb.close();
                 if(err){

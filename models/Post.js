@@ -7,7 +7,7 @@ var mongodb = require('./db');
 function Post(){
     
 };
-Post.prototype.remove = function (name,callback) {
+Post.prototype.remove = function (id,callback) {
 
     mongodb.close();
 
@@ -24,7 +24,7 @@ Post.prototype.remove = function (name,callback) {
             };
 
             collection.remove({
-                "name": name
+                "_id": id
             }, {
                 w: 1
             }, function (err) {

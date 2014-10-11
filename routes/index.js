@@ -4,6 +4,7 @@ var _ = require('../models/underscore-min.js');
 var Time = require('../models/Time.js');
 var Post = require('../models/Post.js');
 
+
 module.exports = function(app) {
     app.get('/', function (req, res) {
         if(!req.session.cart){
@@ -115,15 +116,13 @@ module.exports = function(app) {
     });
     app.get('/product_detail',function(req,res){
 
-        var product_name = req.query.product_name || req.session.current_product;
-        Product.get(function(err,shoppings){
-            var shops = shoppings;
-            if(err){
-                shops = [];
+        var product_id = req.query.product_id || req.session.current_product;
+        Product.getOne(product_id,function(err,product){
+             if(err){
+                return console.log(err);
             }
-            var this_product = _(shops).findWhere({name:product_name});
-        req.session.current_product = product_name;
-        res.render('product_detail',{this_product:this_product,new_property:req.session.detail_property});
+        req.session.current_product = product_id;
+        res.render('product_detail',{this_product:product[0],new_property:req.session.detail_property});
         });
     });
 
@@ -149,33 +148,32 @@ module.exports = function(app) {
     });
 
     app.get('/delete_detail_property',function(req,res){
-        var product_name = req.query.product_name || req.session.current_product;
+        var product_id = req.query.product_id || req.session.current_product;
         Product.get(function(err,shoppings){
             var shops = shoppings;
             if(err){
                 shops = [];
             }
-            var this_product = _(shops).findWhere({name:product_name});
+            var this_product = _(shops).findWhere({name:product_id});
             req.session.current_product = product_name;
-            res.render('delete_detail_property',{this_product:this_product,product_name:product_name});
+            res.render('delete_detail_property',{this_product:this_product,product_name:product_id});
         });
     });
 
     app.get('/delete_this_property',function(req,res){
-        var product_name = req.query.product_name;
+        var product_id = req.query.product_id;
         var property_name = req.query.name;
         var added_property = [];
-        req.session.current_product = product_name;
-        console.log(product_name+'++++++++++'+property_name+'+++++++++===');
+        req.session.current_product = product_id;
         Product.get(function(err,shoppings){
             var shops = shoppings;
             if(err){
                 shops = [];
             }
-            var this_product = _(shops).findWhere({name:product_name});
+            var this_product = _(shops).findWhere({_id:product_id});
             var new_product = _(this_product).omit(property_name);
             var property = new Property();
-            property.update(new_product,product_name,added_property,function (err) {
+            property.update(new_product,product_id,added_property,function (err) {
                 if(err){
                     return res.redirect('/delete_this_property');
                 }
@@ -186,9 +184,9 @@ module.exports = function(app) {
 
     app.get('/delete_product',function(req,res){
         var post = new Post();
-        var product_name = req.query.product_name;
+        var product_id = req.query.product_id;
 
-        post.remove(product_name, function (err) {
+        post.remove(product_id, function (err) {
             if (err) {
 
                 return res.redirect('/admin');
@@ -213,8 +211,8 @@ module.exports = function(app) {
     });
 
     app.get('/detail_add_property',function(req,res){
-        var product_name = req.query.name;
-       res.render('detail_add_property',{name:product_name})
+        var product_id = req.query.product_id;
+       res.render('detail_add_property',{product_id:product_id})
     });
     app.post('/detail_add_property',function(req,res){
         var session_property =req.session.detail_property ||[];
@@ -223,7 +221,7 @@ module.exports = function(app) {
             value:req.body.property_value
         };
         session_property.push(property);
-        req.session.detail_property = session_property = session_property;
+        req.session.detail_property = session_property;
 
         res.redirect('/product_detail')
     });
@@ -233,7 +231,7 @@ module.exports = function(app) {
     });
     app.get('/delete_property',function(req,res){
 
-       var property_name = req.query.property_name;
+       var product_id = req.query.product_id;
         var session_property = req.session.property;
          var sub =_.indexOf(session_property,_.findWhere(session_property,{name:property_name}));
          session_property.splice(sub,1);
@@ -290,10 +288,10 @@ module.exports = function(app) {
     });
 
     app.get('/admin_lessOrMore',function(req,res){
-        var product_name = req.query.shopName;
+        var product_id = req.query.shopId;
         var product_number = parseInt(req.query.number);
         if(req.query.flag == 'less' && product_number !=0){
-            Product.update_number(product_name,'less',product_number,function(err){
+            Product.update_number(product_id,'less',product_number,function(err){
                 if (err) {
                     return res.redirect('/admin');
                 }
@@ -301,7 +299,7 @@ module.exports = function(app) {
             });
         }
         if(req.query.flag == 'more'){
-            Product.update_number(product_name,'More',product_number,function(err){
+            Product.update_number(product_id,'More',product_number,function(err){
                 if (err) {
                     return res.redirect('/admin');
                 }

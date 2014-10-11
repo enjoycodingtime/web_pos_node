@@ -5,6 +5,7 @@
 var mongodb = require('./db');
 var markdown = require('markdown').markdown;
 var _ = require('../public/underscore/underscore-min.js');
+var ObjectId = require('mongodb').ObjectID;
 
 function Product(product){
     this.category = product.category;
@@ -77,7 +78,32 @@ Product.get = function(back){
 };
 
 
-Product.update_number = function(product_name,lessOrMore,number,back){
+Product.getOne = function(id,back){
+    mongodb.close();
+    mongodb.open(function(err,db){
+        if(err){
+            return back(err);
+        }
+        db.collection('shops',function(err,collection){
+            if(err){
+                mongodb.close();
+                return back(err);
+            }
+            collection.find({_id:new ObjectId(id)}).sort({
+                time:1
+            }).toArray(function(err,shops){
+                mongodb.close();
+                if(err){
+                    return back(err);
+                }
+                back(null,shops);
+            });
+        });
+    });
+};
+
+
+Product.update_number = function(product_id,lessOrMore,number,back){
     var product_number = number;
     mongodb.open(function(err,db){
       if(err){
@@ -91,7 +117,7 @@ Product.update_number = function(product_name,lessOrMore,number,back){
 
           if(lessOrMore == 'less'){
               product_number -=1;
-              collection.update({'name':product_name},{$set:{'number':product_number}},
+              collection.update({'_id':product_id},{$set:{'number':product_number}},
                   function(err){
                   mongodb.close();
                   if(err){
@@ -102,7 +128,7 @@ Product.update_number = function(product_name,lessOrMore,number,back){
 
           }else{
               product_number +=1;
-              collection.update({'name':product_name},{$set:{'number':product_number}},
+              collection.update({'_id':product_id},{$set:{'number':product_number}},
                   function(err){
                       mongodb.close();
                       if(err){
@@ -156,7 +182,7 @@ Product.prototype.save = function(property,callback){
     });
 };
 //更新数据
-Product.prototype.update = function(name,property,callback){
+Product.prototype.update = function(product_id,property,callback){
     //要存入数据库的商品
     var product = {
         category:this.category,
@@ -182,7 +208,7 @@ Product.prototype.update = function(name,property,callback){
                 mongodb.close();
                 return callback(err);
             }
-            collection.update({'name':name
+            collection.update({'_id':product_id
                 },product,function(err){
                 mongodb.close();
                 if(err){

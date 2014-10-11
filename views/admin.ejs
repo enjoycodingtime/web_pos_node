@@ -32,15 +32,15 @@
                 <td><%= shop.name %></td>
                 <td>
                     <div class="btn-group">
-                        <a type="button" class="btn btn-default" href="/admin_lessOrMore?flag=less&shopName=<%= shop.name%>&number=<%= shop.number%>">-</a>
+                        <a type="button" class="btn btn-default" href="/admin_lessOrMore?flag=less&shopId=<%= shop._id%>&number=<%= shop.number%>">-</a>
                         <input type="text" name="product_number" class="btn btn-default disabled" value="<%= shop.number%>" size="2">
-                        <a type="button" class="btn btn-default" href="/admin_lessOrMore?flag=more&shopName=<%= shop.name%>&number=<%= shop.number%>">+</a>
+                        <a type="button" class="btn btn-default" href="/admin_lessOrMore?flag=more&shopId=<%= shop._id%>&number=<%= shop.number%>">+</a>
                     </div>
                 </td>
                 <td><%= shop.unitPrice %></td>
                 <td><%= shop.unit %></td>
                 <td><%= shop.publish_time %></td>
-                <td><a href="product_detail?product_name=<%= shop.name %>">详情</a>  <a href="delete_product?product_name=<%= shop.name %>" onclick="return confirm_delete(<%= shop.name %>)">删除</a></td>
+                <td><a href="product_detail?product_id=<%= shop._id %>">详情</a>  <a href="delete_product?product_id=<%= shop._id %>" onclick="return confirm_delete(<%= shop.name %>)">删除</a></td>
             </tr>
             <% })%>
         <script>
