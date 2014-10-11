@@ -40,9 +40,18 @@
                 <td><%= shop.unitPrice %></td>
                 <td><%= shop.unit %></td>
                 <td><%= shop.publish_time %></td>
-                <td><a href="product_detail?product_name=<%= shop.name %>">详情</a>  <a href="delete_product?product_name=<%= shop.name %>">删除</a></td>
+                <td><a href="product_detail?product_name=<%= shop.name %>">详情</a>  <a href="delete_product?product_name=<%= shop.name %>" onclick="return confirm_delete(<%= shop.name %>)">删除</a></td>
             </tr>
             <% })%>
+        <script>
+            function confirm_delete(name){
+                if(confirm('确认要删除:'+name+'商品吗?')){
+                    alert("删除成功!");
+                    return true;
+                }
+                return false;
+            }
+        </script>
 
 
     </table>

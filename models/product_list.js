@@ -35,7 +35,6 @@ Product.getTen = function(name,page,back){
                 query.name = name;
             }
             collection.count(query, function (err, total) {
-
                 //根据 query 对象查询，并跳过前 (page-1)*10 个结果，返回之后的 10 个结果
                 collection.find(query, {
                     skip: (page - 1)*10,
@@ -47,8 +46,6 @@ Product.getTen = function(name,page,back){
                     if (err) {
                         return back(err);
                     }
-                    console.log('tessssssssssssssssst');
-
                     back(null, shops, total);
                 });
             });
