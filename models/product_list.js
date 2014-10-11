@@ -40,7 +40,7 @@ Product.getTen = function(name,page,back){
                     skip: (page - 1)*10,
                     limit: 10
                 }).sort({
-                    time: -1
+                    time: 1
                 }).toArray(function (err, shops) {
                     mongodb.close();
                     if (err) {
@@ -64,7 +64,7 @@ Product.get = function(back){
                 return back(err);
             }
             collection.find({}).sort({
-                time:-1
+                time:1
             }).toArray(function(err,shops){
                 mongodb.close();
                 if(err){

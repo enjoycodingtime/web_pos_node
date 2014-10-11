@@ -22,7 +22,7 @@
         <tr>
             <td><%= property.name %></td>
             <td><input type="text" name="<%= property.name %>" size="20" value="<%= property.value %>"> </td>
-            <td><a href="delete_property?property_name=<%= property.name %>">删除</a></td>
+            <td><a href="delete_property?property_name=<%= property.name %>" onclick="return confirm_delete()">删除</a></td>
         </tr>
             <% })%><% }catch (err){}%>
 
@@ -30,7 +30,15 @@
     </table>
 
 </div>
-
+    <script>
+        function confirm_delete(){
+            if(confirm('确认要删除吗?')){
+                alert("删除成功!");
+                return true;
+            }
+            return false;
+        }
+    </script>
 
 
 <%- include admin_footer.ejs%>
