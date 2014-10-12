@@ -185,7 +185,7 @@ module.exports = function(app) {
     app.get('/delete_product',function(req,res){
         var post = new Post();
         var product_id = req.query.product_id;
-
+        console.log(product_id+'----------------------');
         post.remove(product_id, function (err) {
             if (err) {
 

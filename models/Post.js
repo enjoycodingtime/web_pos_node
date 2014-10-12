@@ -3,6 +3,7 @@
  */
 
 var mongodb = require('./db');
+var ObjectId = require('mongodb').ObjectID;
 
 function Post(){
     
@@ -24,7 +25,7 @@ Post.prototype.remove = function (id,callback) {
             };
 
             collection.remove({
-                "_id": id
+                "_id": new ObjectId(id)
             }, {
                 w: 1
             }, function (err) {
