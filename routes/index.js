@@ -149,14 +149,12 @@ module.exports = function(app) {
 
     app.get('/delete_detail_property',function(req,res){
         var product_id = req.query.product_id || req.session.current_product;
-        Product.get(function(err,shoppings){
-            var shops = shoppings;
+        Product.getOne(product_id,function(err,product){
             if(err){
-                shops = [];
-            }
-            var this_product = _(shops).findWhere({name:product_id});
-            req.session.current_product = product_name;
-            res.render('delete_detail_property',{this_product:this_product,product_name:product_id});
+                return console.log(err);
+            };
+            req.session.current_product = product_id;
+            res.render('delete_detail_property',{this_product:product[0],product_name:product[0].name});
         });
     });
 
@@ -185,7 +183,6 @@ module.exports = function(app) {
     app.get('/delete_product',function(req,res){
         var post = new Post();
         var product_id = req.query.product_id;
-        console.log(product_id+'----------------------');
         post.remove(product_id, function (err) {
             if (err) {
 
