@@ -163,13 +163,12 @@ module.exports = function(app) {
         var property_name = req.query.name;
         var added_property = [];
         req.session.current_product = product_id;
-        Product.get(function(err,shoppings){
-            var shops = shoppings;
+        Product.getOne(product_id,function(err,product){
             if(err){
-                shops = [];
+                return console.log(err);
             }
-            var this_product = _(shops).findWhere({_id:product_id});
-            var new_product = _(this_product).omit(property_name);
+            var this_product = product;
+            var new_product = _(this_product[0]).omit(property_name);
             var property = new Property();
             property.update(new_product,product_id,added_property,function (err) {
                 if(err){

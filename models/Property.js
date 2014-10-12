@@ -4,6 +4,7 @@
 
 var mongodb = require('./db');
 var _ = require('../public/underscore/underscore-min.js');
+var ObjectId = require('mongodb').ObjectID;
 
 function Property(){
 }
@@ -29,7 +30,7 @@ Property.prototype.update = function(product,id,property,callback){
                 mongodb.close();
                 return callback(err);
             }
-            collection.update({'_id':id
+            collection.update({'_id':new ObjectId(id)
             },product,function(err){
                 mongodb.close();
                 if(err){
