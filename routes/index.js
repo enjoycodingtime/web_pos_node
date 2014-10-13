@@ -1,4 +1,4 @@
-var Product = require('../models/product_list.js');
+var Product = require('../models/Product.js');
 var Property = require('../models/Property.js');
 var _ = require('../models/underscore-min.js');
 var Time = require('../models/Time.js');

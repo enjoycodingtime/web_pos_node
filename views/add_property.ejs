@@ -10,7 +10,7 @@
                 属性名：
             </td>
             <td>
-                <input type="text"  name="property_name" placeholder="请输入属性名" size="20">
+                <input type="text"  name="property_name" placeholder="请输入属性名" size="20" onchange="check_input()">
             </td>
         </tr>
         <tr>
@@ -18,12 +18,12 @@
                 属性值：
             </td>
             <td>
-                <input type="text"  name="property_value" placeholder="请输入属性值" size="20">
+                <input type="text"  name="property_value" placeholder="请输入属性值" size="20" onchange="check_input()">
             </td>
         </tr>
         <tr>
             <td>
-                <input type="submit"  class="btn btn-default"  value="保存" onclick="return verification()">
+                <input type="submit"  class="btn btn-default" disabled="true" value="保存" id="submit" onclick="return verification()">
             </td>
             <td>
                 <a type="button" class="btn btn-default" href="add_product">取消</a>
@@ -35,6 +35,17 @@
 
 </div>
 
+<script>
+    function check_input(){
+        var submit=document.getElementById("submit");
+        if(document.add_property.property_name.value ==""||document.add_property.property_value.value ==""){
+            submit.disabled = true;
+        }
+        else{
+            submit.disabled = false;
+        }
+    }
+</script>
 
 
 <%- include admin_footer.ejs%>

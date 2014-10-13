@@ -3,7 +3,6 @@
  */
 
 var mongodb = require('./db');
-var markdown = require('markdown').markdown;
 var _ = require('../public/underscore/underscore-min.js');
 var ObjectId = require('mongodb').ObjectID;
 
@@ -41,7 +40,7 @@ Product.getTen = function(name,page,back){
                     skip: (page - 1)*10,
                     limit: 10
                 }).sort({
-                    time: 1
+                    _id:-1
                 }).toArray(function (err, shops) {
                     mongodb.close();
                     if (err) {
@@ -65,7 +64,7 @@ Product.get = function(back){
                 return back(err);
             }
             collection.find({}).sort({
-                time:1
+                _id:-1
             }).toArray(function(err,shops){
                 mongodb.close();
                 if(err){
