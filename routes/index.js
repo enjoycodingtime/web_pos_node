@@ -99,7 +99,7 @@ module.exports = function(app) {
             unit:req.body.product_unit,
             publish_time:current_time.get_time()
         });
-        var properties = req.session.property;
+        var properties = req.session.property || [];
         var added_property = {};
         if(properties.length !=0){
             properties.forEach(function(value){
@@ -196,7 +196,7 @@ module.exports = function(app) {
     });
     app.post('/add_property',function(req,res){
 
-        var session_property =req.session.property;
+        var session_property =req.session.property ||[];
         var property = {
             name:req.body.property_name,
             value:req.body.property_value
@@ -227,7 +227,7 @@ module.exports = function(app) {
     });
     app.get('/delete_property',function(req,res){
 
-       var product_id = req.query.product_id;
+       var property_name = req.query.property_name;
         var session_property = req.session.property;
          var sub =_.indexOf(session_property,_.findWhere(session_property,{name:property_name}));
          session_property.splice(sub,1);

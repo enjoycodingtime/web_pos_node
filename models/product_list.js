@@ -117,7 +117,7 @@ Product.update_number = function(product_id,lessOrMore,number,back){
 
           if(lessOrMore == 'less'){
               product_number -=1;
-              collection.update({'_id':product_id},{$set:{'number':product_number}},
+              collection.update({'_id':ObjectId(product_id)},{$set:{'number':product_number}},
                   function(err){
                   mongodb.close();
                   if(err){
@@ -128,7 +128,7 @@ Product.update_number = function(product_id,lessOrMore,number,back){
 
           }else{
               product_number +=1;
-              collection.update({'_id':product_id},{$set:{'number':product_number}},
+              collection.update({'_id':ObjectId(product_id)},{$set:{'number':product_number}},
                   function(err){
                       mongodb.close();
                       if(err){

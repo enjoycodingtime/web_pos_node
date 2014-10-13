@@ -8,7 +8,8 @@ function verification (){
             return true;
         } else {
             alert('不是日期');
+            return false;
         }
     }
-    return false;
+    return true;
 }
