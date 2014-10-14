@@ -18,7 +18,6 @@
                   else  if (value == 'number'){%><td>数量</td><%}
                   else  if (value == 'unitPrice'){%><td>单价</td><%}
                    else  if (value == 'publish_time'){%><td>发布日期</td><%}
-
                     else{%><td><%= value%></td><%}%>
                     <td><input type="text" name="<%= value%>" size="20" value="<%= this_product[value] %>"> </td>
                     <% if(sum %2 ==0){%></tr><tr><% }%>

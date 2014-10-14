@@ -22,9 +22,9 @@
                         商品数量：</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default">-</button>
-                            <input type="text" class="btn btn-default" name="product_number" value="0" size="2" onchange="check_input()">
-                            <button type="button" class="btn btn-default">+</button>
+                            <button type="button" class="btn btn-default" id='less_number'>-</button>
+                            <input type="text" class="btn btn-default" name="product_number" value="0" size="2" onchange="check_input()" id='number' onKeypress="return (/[\d.]/.test(String.fromCharCode(event.keyCode)))" style="ime-mode:Disabled">
+                            <button type="button" class="btn btn-default" id='add_number'>+</button>
                         </div>
                     </td>
                 </tr>
