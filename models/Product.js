@@ -20,7 +20,6 @@ module.exports = Product;
 
 Product.getTen = function(name,page,back){
 
-    mongodb.close();
     mongodb.open(function(err,db){
         if(err){
             return back(err);

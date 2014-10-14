@@ -16,9 +16,10 @@ module.exports = function(app) {
         res.render('index',{title:"主页",total:req.session.total,home_active:"active",product_active:"",shopping_cart_active:''});
     });
     app.get('/product_list', function (req, res) {
-        Product.get(function(err,shoppings){
-            var shops = shoppings;
-            if(err){
+        var page = req.query.p ? parseInt(req.query.p) : 1;
+        //查询并返回第 page 页的 10 篇文章
+        Product.getTen(null, page, function (err, shops, total) {
+            if (err) {
                 shops = [];
             }
             if(req.query.pay == "pay"){
@@ -27,6 +28,9 @@ module.exports = function(app) {
             }
             res.render('product_list',{
                 total:req.session.total,
+                page: page,
+                isFirstPage: (page - 1) == 0,
+                isLastPage: ((page - 1) * 10 + shops.length) == total,
                 shops:shops,
                 product_active:"active",
                 home_active:'',
@@ -71,8 +75,7 @@ module.exports = function(app) {
         req.session.detail_property = [];
         var page = req.query.p ? parseInt(req.query.p) : 1;
         //查询并返回第 page 页的 10 篇文章
-        Product.getTen(null, page, function (err, shoppings, total) {
-            var shops = shoppings;
+        Product.getTen(null, page, function (err, shops, total) {
             if (err) {
                 shops = [];
             }
