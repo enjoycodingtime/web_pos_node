@@ -308,5 +308,11 @@ module.exports = function(app) {
 
 
     });
+    app.get('/discount',function(req,res){
+        res.render('discount')
+    });
+    app.get('/discount_rules',function(req,res){
+       res.render('discount_rules')
+    });
 };
 

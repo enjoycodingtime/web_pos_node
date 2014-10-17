@@ -1,0 +1,45 @@
+<%- include admin_header.ejs%>
+
+<div class="mainBlock text-center">
+    <form class="form-horizontal" role="form" method="post" name = 'add_discount'>
+        <table class="table">
+            <tr>
+                <td>
+                    打折规则：
+                </td>
+                <td>
+                    <input type="text"  name="discount_rules" placeholder="请输入打折规则" size="40" >
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    打折期限：
+                </td>
+                <td>
+                    <input type="text"  name="start_date" placeholder="请输入开始时间" size="18">~~<input type="text"  name="end_date" placeholder="请输入结束时间" size="18">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    买 <input type="text" name = 'buy_number' size="4"/> 赠 <input type="text" name = 'discount_number' size="4"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit"  class="btn btn-default"  value="添加" id="submit">
+                </td>
+                <td>
+                    <a type="button" class="btn btn-default" href="add_product">取消</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+
+</div>
+
+
+
+
+<%- include admin_footer.ejs%>
