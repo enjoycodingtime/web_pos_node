@@ -18,6 +18,10 @@ function Product(product){
 
 module.exports = Product;
 
+Product.add_rule = function(rule,back){
+    console.log(rule+'-------------------------------------');
+};
+
 Product.getTen = function(name,page,back){
 
     mongodb.open(function(err,db){

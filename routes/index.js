@@ -3,6 +3,7 @@ var Property = require('../models/Property.js');
 var _ = require('../models/underscore-min.js');
 var Time = require('../models/Time.js');
 var Post = require('../models/Post.js');
+var Discount = require('../models/Discount.js');
 
 
 module.exports = function(app) {
@@ -309,10 +310,36 @@ module.exports = function(app) {
 
     });
     app.get('/discount',function(req,res){
-        res.render('discount')
-    });
-    app.get('/discount_rules',function(req,res){
-       res.render('discount_rules')
-    });
-};
+        var page = req.query.p ? parseInt(req.query.p) : 1;
+        //查询并返回第 page 页的 10 篇文章
+        discount.getTen(null, page, function (err, rules, total) {
+            if (err) {
+                rules = [];
+            }
 
+        res.render('discount',{rules:rules,
+            page: page,
+            isFirstPage: (page - 1) == 0,
+            isLastPage: ((page - 1) * 10 + rules.length) == total});
+        });
+    });
+    app.get('/add_discount_rules',function(req,res){
+       res.render('add_discount_rules')
+    });
+    app.post('/add_discount_rules',function(req,res){
+        var rules = {
+                rule:req.body.discount_rules,
+                start_date:req.body.start_date,
+                end_date:req.body.end_date,
+                buy:req.body.buy_number,
+                discount:req.body.discount_number
+            };
+         var discount = new Discount();
+        discount.add_rule(rules,function (err) {
+            if(err){
+                return res.redirect('/discount');
+            };
+        res.redirect('/discount');
+    })
+});
+};

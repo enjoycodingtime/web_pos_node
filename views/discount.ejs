@@ -1,5 +1,5 @@
 <%- include admin_header.ejs%>
-<a type="button" class="btn btn-default" href="discount_rules">打折规则</a>
+<a type="button" class="btn btn-default" href="/add_discount_rules">添加规则</a>
 <div class="mainBlock text-center">
     <form class="form-horizontal" role="form" method="post" name = 'add_discount'>
         <table class="table">
@@ -20,9 +20,29 @@
                     操作
                 </td>
             </tr>
+            <% rules.forEach(function(rules,index){ %>
             <tr>
-               
+
+                <td><%= rules.rule %></td>
+                <td><%= rules.start_date %></td>
+                <td><%= rules.end_date %></td>
+                <td><%= rules.buy %></td>
+                <td> <a href="delete_product?product_id=<%= rules._id %>" onclick="return confirm_delete(<%= rules.name %>)">删除</a></td>
             </tr>
+            <% })%>
+             <tr>
+            <td>
+                <div>
+                    <% if (!isFirstPage) { %>
+                    <span class="prepage"><a title="上一页" href="?p=<%= page-1 %>">上一页</a></span>
+                    <% } %>
+
+                    <% if (!isLastPage) { %>
+                    <span class="nextpage"><a title="下一页" href="?p=<%= page+1 %>">下一页</a></span>
+                    <% } %>
+                </div>
+            </td>
+        </tr>
         </table>
     </form>
 
