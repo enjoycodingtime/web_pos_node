@@ -4,6 +4,7 @@ var _ = require('../models/underscore-min.js');
 var Time = require('../models/Time.js');
 var Post = require('../models/Post.js');
 var Discount = require('../models/Discount.js');
+var Filter = require('../models/Filter.js');
 
 
 module.exports = function(app) {
@@ -312,15 +313,18 @@ module.exports = function(app) {
     app.get('/discount',function(req,res){
         var page = req.query.p ? parseInt(req.query.p) : 1;
         //查询并返回第 page 页的 10 篇文章
-        discount.getTen(null, page, function (err, rules, total) {
+        Discount.getTen(null, page, function (err, rules, total) {
             if (err) {
                 rules = [];
             }
-
-        res.render('discount',{rules:rules,
+            Filter.filter(rules,function(err,name){
+                if (err) {return res.redirect('/admin')};
+                console.log(name);
+            res.render('discount',{rules:rules,
             page: page,
             isFirstPage: (page - 1) == 0,
             isLastPage: ((page - 1) * 10 + rules.length) == total});
+            })
         });
     });
     app.get('/add_discount_rules',function(req,res){
