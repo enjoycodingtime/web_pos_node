@@ -2,7 +2,7 @@ function Filter(){
 
 };
 Filter.filter  = function(rule,back){
-var str =rule[0].rule; 
+var str =rule; 
 var reg = new RegExp('name','g');
 var result;
 var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]") 
@@ -26,7 +26,7 @@ while ((result = reg.exec(rs)) != null)  {
 back(null,name);	
 };
 Filter.filter_date  = function(rule,back){
-var str =rule[0].rule; 
+var str =rule; 
 var reg = new RegExp('date','g');
 var result;
 var pattern = new RegExp("[`~!@#$^&*()|{}':;',\\[\\]./?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]") 

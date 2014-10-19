@@ -104,6 +104,31 @@ Product.getOne = function(id,back){
     });
 };
 
+Product.getOneByName = function(name,back){
+    mongodb.close();
+    mongodb.open(function(err,db){
+        if(err){
+            return back(err);
+        }
+        db.collection('shops',function(err,collection){
+            if(err){
+                mongodb.close();
+                return back(err);
+            }
+            collection.find({name:name}).sort({
+                time:1
+            }).toArray(function(err,shops){
+                mongodb.close();
+                if(err){
+                    return back(err);
+                }
+                back(null,shops);
+            });
+        });
+    });
+};
+
+
 
 Product.update_number = function(product_id,lessOrMore,number,back){
     var product_number = number;

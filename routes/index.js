@@ -82,10 +82,10 @@ module.exports = function(app) {
                 shops = [];
             }
 
-        res.render('admin',{shops:shops,
-            page: page,
-            isFirstPage: (page - 1) == 0,
-            isLastPage: ((page - 1) * 10 + shops.length) == total});
+            res.render('admin',{shops:shops,
+                page: page,
+                isFirstPage: (page - 1) == 0,
+                isLastPage: ((page - 1) * 10 + shops.length) == total});
         });
     });
 
@@ -123,12 +123,12 @@ module.exports = function(app) {
 
         var product_id = req.query.product_id || req.session.current_product;
         Product.getOne(product_id,function(err,product){
-             if(err){
-                return console.log(err);
-            }
+           if(err){
+            return console.log(err);
+        }
         req.session.current_product = product_id;
         res.render('product_detail',{this_product:product[0],new_property:req.session.detail_property});
-        });
+    });
     });
 
     app.post('/product_detail',function(req,res){
@@ -197,8 +197,8 @@ module.exports = function(app) {
         });
     });
     app.get('/add_property',function(req,res){
-       res.render('add_property');
-    });
+     res.render('add_property');
+ });
     app.post('/add_property',function(req,res){
 
         var session_property =req.session.property ||[];
@@ -213,7 +213,7 @@ module.exports = function(app) {
 
     app.get('/detail_add_property',function(req,res){
         var product_id = req.query.product_id;
-       res.render('detail_add_property',{product_id:product_id})
+        res.render('detail_add_property',{product_id:product_id})
     });
     app.post('/detail_add_property',function(req,res){
         var session_property =req.session.detail_property ||[];
@@ -228,17 +228,17 @@ module.exports = function(app) {
     });
 
     app.get('/delete_product_property',function(req,res){
-       res.render('delete_product_property',{propertys:req.session.property})
-    });
+     res.render('delete_product_property',{propertys:req.session.property})
+ });
     app.get('/delete_property',function(req,res){
 
-       var property_name = req.query.property_name;
-        var session_property = req.session.property;
-         var sub =_.indexOf(session_property,_.findWhere(session_property,{name:property_name}));
-         session_property.splice(sub,1);
-        req.session.property = session_property;
-        res.redirect('/add_product');
-    });
+     var property_name = req.query.property_name;
+     var session_property = req.session.property;
+     var sub =_.indexOf(session_property,_.findWhere(session_property,{name:property_name}));
+     session_property.splice(sub,1);
+     req.session.property = session_property;
+     res.redirect('/add_product');
+ });
 
     app.post('/addToCart',function(req,res){
 
@@ -317,33 +317,36 @@ module.exports = function(app) {
             if (err) {
                 rules = [];
             }
-            Filter.filter(rules,function(err,name){
-                if (err) {return res.redirect('/admin')};
-                console.log(name);
             res.render('discount',{rules:rules,
             page: page,
             isFirstPage: (page - 1) == 0,
             isLastPage: ((page - 1) * 10 + rules.length) == total});
-            })
         });
     });
-    app.get('/add_discount_rules',function(req,res){
-       res.render('add_discount_rules')
-    });
-    app.post('/add_discount_rules',function(req,res){
-        var rules = {
-                rule:req.body.discount_rules,
-                start_date:req.body.start_date,
-                end_date:req.body.end_date,
-                buy:req.body.buy_number,
-                discount:req.body.discount_number
-            };
-         var discount = new Discount();
-        discount.add_rule(rules,function (err) {
-            if(err){
-                return res.redirect('/discount');
-            };
-        res.redirect('/discount');
-    })
+app.get('/add_discount_rules',function(req,res){
+ res.render('add_discount_rules')
+});
+app.post('/add_discount_rules',function(req,res){
+        
+        Filter.filter(req.body.discount_rules,function(err,name){
+            Filter.filter_date(req.body.discount_rules,function(err,date){
+                var rules = {
+                        name:name,
+                        date:date,
+                        time:req.body.start_date+'to'+req.body.end_date,
+                        discount_way:'buy'+req.body.buy_number+'give'+req.body.discount_number
+                    };
+                    var discount = new Discount();
+                    discount.add_rule(rules,function (err) {
+                        if(err){
+                            return res.redirect('/discount');
+                        };
+                    })
+             res.redirect('/discount');
+            })
+                 
+        })
+
+
 });
 };

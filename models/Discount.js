@@ -9,6 +9,7 @@ function Discount(){
 Discount.prototype.add_rule = function(rule,callback){
    
     //打开数据库
+    mongodb.close();
     mongodb.open(function(err,db){
         if(err){
             return callback(err);
@@ -61,6 +62,34 @@ Discount.getTen = function(name,page,back){
                     }
                     back(null, rules, total);
                 });
+            });
+        });
+    });
+};
+
+Discount.add_rule = function(rule){
+   
+    //打开数据库
+    mongodb.close();
+    mongodb.open(function(err,db){
+        if(err){
+            return callback(err);
+        }
+
+        db.collection('rules',function(err,collection){
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            //将商品信息插入shops集合
+            collection.insert(rule,{
+                safe:true
+            },function(err){
+                mongodb.close();
+                if(err){
+                    return callback(err);
+                }
+                callback(null);
             });
         });
     });
