@@ -23,10 +23,10 @@
             <% rules.forEach(function(rules,index){ %>
             <tr>
 
-                <td><%= rules.rule %></td>
-                <td><%= rules.start_date %></td>
-                <td><%= rules.end_date %></td>
-                <td><%= rules.buy %></td>
+                <td><%= rules.name %></td>
+                <td><%= rules.price %></td>
+                <td><%= rules.time %></td>
+                <td><%= rules.discount_way %></td>
                 <td> <a href="delete_product?product_id=<%= rules._id %>" onclick="return confirm_delete(<%= rules.name %>)">删除</a></td>
             </tr>
             <% })%>

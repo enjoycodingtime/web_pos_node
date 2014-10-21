@@ -23,7 +23,7 @@ while ((result = reg.exec(rs)) != null)  {
  		name.push(rs.substr(indexs[i],indexs[i+1]-indexs[i]-4))
  	}
  }
-back(null,name);	
+back(name);
 };
 Filter.filter_date  = function(rule,back){
 var str =rule; 
@@ -55,6 +55,6 @@ while ((result = reg.exec(rs)) != null)  {
  		}
  	}
  }
-back(null,date);	
+back(date);
 };
 module.exports = Filter;

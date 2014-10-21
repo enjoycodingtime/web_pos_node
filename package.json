@@ -12,6 +12,8 @@
     "connect-mongo":"*",
     "jquery"  : "*",
     "connect-flash":"*",
-    "markdown":"*"
+    "markdown":"*",
+    "underscore":"*",
+      "mongoose":"*"
   }
 }

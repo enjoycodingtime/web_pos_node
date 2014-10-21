@@ -7,9 +7,10 @@ function Discount(){
 
 };
 Discount.prototype.add_rule = function(rule,callback){
-   
+
+    console.log('--------------------------',rule);
     //打开数据库
-    mongodb.close();
+//    mongodb.close();
     mongodb.open(function(err,db){
         if(err){
             return callback(err);
