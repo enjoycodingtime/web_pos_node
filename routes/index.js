@@ -43,6 +43,7 @@ module.exports = function(app) {
 
     });
     app.get('/shopping_cart', function (req, res) {
+        console.log(req.session.cart);
         res.render('shopping_cart', { title: 'web_pos',product_active:"",
             home_active:'',
             shopping_cart_active:'active',
@@ -339,9 +340,7 @@ module.exports = function(app) {
                     rule.time = req.body.start_date+'to'+req.body.end_date;
                     rule.discount_way = 'buy'+req.body.buy_number+'give'+req.body.discount_number;
                 });
-                    console.log("-------------------------add",rule);
                     new Rule().add_rule(rule);
-    
             });
         })
         res.redirect('/discount');
