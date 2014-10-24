@@ -9,8 +9,14 @@ Discount.filter = function(shopping_cart,discount_rule){
 };
 
 Discount.filter_rule = function (discount_rule,shopping_cart) {
-    console.log(discount_rule);
-    if(discount_rule.length == 0) return shopping_cart;
+    if(discount_rule.length == 0){
+        if(!_.isArray(shopping_cart)){
+            var new_array = [];
+            new_array[0] = shopping_cart;
+            shopping_cart = new_array;
+        }
+        return shopping_cart;
+    }
     var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
 
     while(reg.exec(discount_rule)){
@@ -20,7 +26,6 @@ Discount.filter_rule = function (discount_rule,shopping_cart) {
     };
     if(discount_rule !=''){
         shopping_cart = Discount.filter_last(discount_rule,shopping_cart);
-        console.log(shopping_cart);
         discount_rule = '';
     }
     return Discount.filter_rule(discount_rule,shopping_cart);
@@ -37,13 +42,10 @@ Discount.format = function (discount_rule) {
 };
 
 Discount.filter_or_and = function (discount_rule,shopping_cart) {
-    console.log(discount_rule);
-    console.log(shopping_cart);
     var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
     var result = reg.exec(discount_rule);
     var cuted_rule = discount_rule.substr(0,result.index);
     discount_rule = discount_rule.substr(result.index+2,discount_rule.length-result.index-2);
-    console.log(discount_rule);
     var filtered_rule = Discount.filter_information(cuted_rule);
     if(filtered_rule.property_name == 'publish_time'){
         var cart = Discount.filter_publich_time(filtered_rule,shopping_cart);
@@ -51,17 +53,22 @@ Discount.filter_or_and = function (discount_rule,shopping_cart) {
         var obj = {};
         obj[filtered_rule.property_name] = filtered_rule.property_value;
         var cart = _(shopping_cart).where(obj);
+        console.log(cart);
     }
-
     if(result[0] == '||' && reg.exec(discount_rule)){
         var or = Discount.filter_or_and(discount_rule,shopping_cart);
         discount_rule = or.discount_rule;
-        cart.push(or.shopping_cart[0]);
+        console.log(or.shopping_cart);
+        console.log(cart);
+        for(var i = 0,len = or.shopping_cart.length;i<len;i++){
+            cart.push(or.shopping_cart[0]);
+            console.log(cart);
+        }
+//        cart.push(or.shopping_cart[0]);
     }
 
     else if(result[0] == '||' && !reg.exec(discount_rule)){
         var last = Discount.filter_last(discount_rule,shopping_cart);
-        console.log(last);
         discount_rule = '';
         cart.push(last);
         console.log(cart);
@@ -83,7 +90,6 @@ Discount.filter_information = function(cuted_rule){
     filtered_rule.operator = operator[0];
     filtered_rule.property_name = cuted_rule.substr(0,operator_index);
     filtered_rule.property_value = cuted_rule.substr(operator_index+operator.length);
-    console.log(filtered_rule);
     return filtered_rule;
 };
 
@@ -92,14 +98,12 @@ Discount.filter_last = function(discount_rule,shopping_cart){
         if(filtered_information.property_name == 'publish_time'){
             var cart = Discount.filter_publich_time(filtered_information,shopping_cart);
         }else{
-            console.log(shopping_cart,filtered_information);
             var obj = {};
             obj[filtered_information.property_name] = filtered_information.property_value;
             var cart = _(shopping_cart).where(obj);
             if(cart.length == 1){
                 cart = cart[0];
             };
-            console.log(cart);
         }
     return cart;
 };
