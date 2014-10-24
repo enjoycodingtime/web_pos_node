@@ -17,3 +17,9 @@ Discount_rule.get_rule3 = function() {
 Discount_rule.get_rule4 = function() {
     return "name=='苹果'&&publish_time>'11/11/2014‘";
 };
+Discount_rule.get_rule5 = function() {
+    return "publish_time=='13/11/2014'";
+};
+Discount_rule.get_rule6 = function() {
+    return "publish_time<'11/11/2014'&&(name=='苹果'||name=='mx4')";
+};

@@ -9,6 +9,7 @@ Discount.filter = function(shopping_cart,discount_rule){
 };
 
 Discount.filter_rule = function (discount_rule,shopping_cart) {
+    console.log(discount_rule);
     if(discount_rule.length == 0) return shopping_cart;
     var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
 
@@ -35,14 +36,22 @@ Discount.format = function (discount_rule) {
 };
 
 Discount.filter_or_and = function (discount_rule,shopping_cart) {
+    console.log(discount_rule);
+    console.log(shopping_cart);
     var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
     var result = reg.exec(discount_rule);
     var cuted_rule = discount_rule.substr(0,result.index);
     discount_rule = discount_rule.substr(result.index+2,discount_rule.length-result.index-2);
+    console.log(discount_rule);
     var filtered_rule = Discount.filter_information(cuted_rule);
-    var obj = {};
-    obj[filtered_rule.property_name] = filtered_rule.property_value;
-    var cart = _(shopping_cart).where(obj);
+    if(filtered_rule.property_name == 'publish_time'){
+        var cart = Discount.filter_publich_time(filtered_rule,shopping_cart);
+    }else{
+        var obj = {};
+        obj[filtered_rule.property_name] = filtered_rule.property_value;
+        var cart = _(shopping_cart).where(obj);
+    }
+
     if(result[0] == '||' && reg.exec(discount_rule)){
         var or = Discount.filter_or_and(discount_rule,shopping_cart);
         discount_rule = or.discount_rule;
@@ -71,6 +80,7 @@ Discount.filter_information = function(cuted_rule){
     filtered_rule.operator = operator[0];
     filtered_rule.property_name = cuted_rule.substr(0,operator_index);
     filtered_rule.property_value = cuted_rule.substr(operator_index+operator.length);
+    console.log(filtered_rule);
     return filtered_rule;
 };
 
@@ -91,6 +101,7 @@ Discount.filter_publich_time = function(filtered_information,shopping_cart){
         month = filtered_information.property_value.substr(3,2),
         day = filtered_information.property_value.substr(0,2),
         operator = filtered_information.operator;
+
     var cart = _(shopping_cart).filter(function(cart){
         var y = cart.publish_time.substr(6),
             m = cart.publish_time.substr(3,2),
