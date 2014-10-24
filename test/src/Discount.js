@@ -38,7 +38,9 @@ Discount.filter_or_and = function (discount_rule,shopping_cart) {
     var cuted_rule = discount_rule.substr(0,result.index);
     discount_rule = discount_rule.substr(result.index+2,discount_rule.length-result.index-2);
     var filtered_rule = Discount.filter_information(cuted_rule);
-    var cart = _(shopping_cart).where(filtered_rule);
+    var obj = {};
+    obj[filtered_rule.property_name] = filtered_rule.property_value;
+    var cart = _(shopping_cart).where(obj);
     if(result[0] == '||'){
         var or = Discount.filter_or_and(discount_rule,shopping_cart);
         discount_rule = or.discount_rule;
@@ -58,37 +60,58 @@ Discount.filter_information = function(cuted_rule){
     var operator_index= reg2.exec(cuted_rule).index,
         operator = reg2.exec(cuted_rule)[0],
         filtered_rule = {};
-    filtered_rule[cuted_rule.substr(0,operator_index)] = cuted_rule.substr(operator_index+operator.length);
+//    filtered_rule[cuted_rule.substr(0,operator_index)] = cuted_rule.substr(operator_index+operator.length);
+    filtered_rule.operator = operator[0];
+    filtered_rule.property_name = cuted_rule.substr(0,operator_index);
+    filtered_rule.property_value = cuted_rule.substr(operator_index+operator.length);
+    console.log(filtered_rule);
     return filtered_rule;
 };
 
 Discount.filter_last = function(discount_rule,shopping_cart){
     var filtered_information = Discount.filter_information(discount_rule);
-    for(key in filtered_information){
-        if(key == 'publish_time'){
+        if(filtered_information.property_name == 'publish_time'){
             var cart = Discount.filter_publich_time(filtered_information,shopping_cart);
         }
-    }
     return cart;
 };
 
 Discount.filter_publich_time = function(filtered_information,shopping_cart){
-    var year = filtered_information[key].substr(6),
-        month = filtered_information[key].substr(3,2),
-        day = filtered_information[key].substr(0,2);
+    var year = filtered_information.property_value.substr(6),
+        month = filtered_information.property_value.substr(3,2),
+        day = filtered_information.property_value.substr(0,2),
+        operator = filtered_information.operator;
     var cart = _(shopping_cart).filter(function(cart){
         var y = cart.publish_time.substr(6),
             m = cart.publish_time.substr(3,2),
             d = cart.publish_time.substr(0,2);
-        if(y<year){
-            return cart;
-        }else if(y == year && m<month){
-            console.log("month");
-            return cart;
-        }else if(y == year &&m == month && d<day){
-            console.log("day");
-            return cart;
+        if(operator === '<'){
+            if(y<year){
+                return cart;
+            }else if(y == year && m<month){
+                console.log("month");
+                return cart;
+            }else if(y == year &&m == month && d<day){
+                console.log("day");
+                return cart;
+            }
+        }
+        if(operator === '>'){
+            if(y>year){
+                return cart;
+            }else if(y == year && m>month){
+                console.log("month");
+                return cart;
+            }else if(y == year &&m == month && d>day){
+                console.log("day");
+                return cart;
+            }
+        }
+        if(operator === '='){
+            if(y == year &&m == month && d == day){
+                return cart;
+            }
         }
     });
     return cart;
-}
+};
