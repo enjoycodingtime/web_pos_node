@@ -20,6 +20,7 @@ Discount.filter_rule = function (discount_rule,shopping_cart) {
     };
     if(discount_rule !=''){
         shopping_cart = Discount.filter_last(discount_rule,shopping_cart);
+        console.log(shopping_cart);
         discount_rule = '';
     }
     return Discount.filter_rule(discount_rule,shopping_cart);
@@ -60,8 +61,10 @@ Discount.filter_or_and = function (discount_rule,shopping_cart) {
 
     else if(result[0] == '||' && !reg.exec(discount_rule)){
         var last = Discount.filter_last(discount_rule,shopping_cart);
+        console.log(last);
         discount_rule = '';
         cart.push(last);
+        console.log(cart);
     }
     return {discount_rule:discount_rule,shopping_cart:cart}
 };
@@ -89,9 +92,14 @@ Discount.filter_last = function(discount_rule,shopping_cart){
         if(filtered_information.property_name == 'publish_time'){
             var cart = Discount.filter_publich_time(filtered_information,shopping_cart);
         }else{
+            console.log(shopping_cart,filtered_information);
             var obj = {};
             obj[filtered_information.property_name] = filtered_information.property_value;
-            var cart = _(shopping_cart).where(obj)[0];
+            var cart = _(shopping_cart).where(obj);
+            if(cart.length == 1){
+                cart = cart[0];
+            };
+            console.log(cart);
         }
     return cart;
 };

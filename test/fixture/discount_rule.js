@@ -23,3 +23,6 @@ Discount_rule.get_rule5 = function() {
 Discount_rule.get_rule6 = function() {
     return "publish_time<'11/11/2014'&&(name=='苹果'||name=='mx4')";
 };
+Discount_rule.get_rule7 = function() {
+    return "category == 水果";
+};
