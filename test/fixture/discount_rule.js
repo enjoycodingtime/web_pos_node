@@ -32,3 +32,6 @@ Discount_rule.get_rule8 = function() {
 Discount_rule.get_rule9 = function() {
     return "name=='苹果'||name=='mx4||name ==锤子T";
 };
+Discount_rule.get_rule10 = function() {
+    return "(name=='苹果'||(name=='香蕉'&&category ==水果))";
+};
