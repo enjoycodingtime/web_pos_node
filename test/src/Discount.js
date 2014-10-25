@@ -17,18 +17,27 @@ Discount.filter_rule = function (discount_rule,shopping_cart) {
         }
         return shopping_cart;
     }
-    var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
-
-    while(reg.exec(discount_rule)){
-        var back = Discount.filter_or_and(discount_rule,shopping_cart);
+    var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/,reg3 = /&&/g,reg4 = /\|\|/g;
+    if(!reg3.exec(discount_rule) && reg4.exec(discount_rule)){
+        console.log('-------------')
+        var back = Discount.only_or(discount_rule,shopping_cart);
         discount_rule = back.discount_rule;
         shopping_cart = back.shopping_cart;
-    };
-    if(discount_rule !=''){
-        shopping_cart = Discount.filter_last(discount_rule,shopping_cart);
-        discount_rule = '';
+        return Discount.filter_rule(discount_rule,shopping_cart);
+    }else{
+        while(reg.exec(discount_rule)){
+            var back = Discount.filter_or_and(discount_rule,shopping_cart);
+            discount_rule = back.discount_rule;
+            shopping_cart = back.shopping_cart;
+        };
+        if(discount_rule !=''){
+            shopping_cart = Discount.filter_last(discount_rule,shopping_cart);
+            discount_rule = '';
+        }
+        return Discount.filter_rule(discount_rule,shopping_cart);
     }
-    return Discount.filter_rule(discount_rule,shopping_cart);
+
+
 };
 
 Discount.format = function (discount_rule) {
@@ -143,4 +152,32 @@ Discount.filter_publich_time = function(filtered_information,shopping_cart){
         }
     });
     return cart;
+};
+Discount.only_or = function (discount_rule,shopping_cart){
+
+    var reg =/\|\|/,reg2 = /(==)|<|>|(<=)|(>=)/;
+    var car = [];
+    while(discount_rule.length != 0){
+        console.log('-----')
+        var result = reg.exec(discount_rule);
+        if(result){
+        var cuted_rule = discount_rule.substr(0,result.index);
+        discount_rule = discount_rule.substr(result.index+2,discount_rule.length-result.index-2);
+        var filtered_rule = Discount.filter_information(cuted_rule);
+        if(filtered_rule.property_name == 'publish_time'){
+            var cart = Discount.filter_publich_time(filtered_rule,shopping_cart);
+        }else{
+            var obj = {};
+            obj[filtered_rule.property_name] = filtered_rule.property_value;
+            var cart = _(shopping_cart).where(obj)[0];
+            console.log(cart);
+        }
+       }else{
+            var cart = Discount.filter_last(discount_rule,shopping_cart);
+            discount_rule = '';
+        }
+        car.push(cart);
+        console.log(car);
+    }
+    return {discount_rule:discount_rule,shopping_cart:car}
 };
