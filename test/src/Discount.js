@@ -56,13 +56,21 @@ Discount.filter_or_and = function (discount_rule,shopping_cart) {
     var result = reg.exec(discount_rule);
     var cuted_rule = discount_rule.substr(0,result.index);
     discount_rule = discount_rule.substr(result.index+2,discount_rule.length-result.index-2);
+    while(cuted_rule.substr(cuted_rule.length-1) ==')'){
+        console.log("--------------------")
+        cuted_rule = cuted_rule.substr(0,cuted_rule.length-1);
+    };
     var filtered_rule = Discount.filter_information(cuted_rule);
+    console.log(discount_rule);
+    console.log(filtered_rule);
     if(filtered_rule.property_name == 'publish_time'){
+        console.log('publish_time')
         var cart = Discount.filter_publich_time(filtered_rule,shopping_cart);
     }else{
         var obj = {};
         obj[filtered_rule.property_name] = filtered_rule.property_value;
         var cart = _(shopping_cart).where(obj);
+        console.log(obj,"obj",shopping_cart,cart)
         console.log(cart);
     }
     if(result[0] == '||' && reg.exec(discount_rule)){
@@ -105,10 +113,12 @@ Discount.filter_information = function(cuted_rule){
 };
 
 Discount.filter_last = function(discount_rule,shopping_cart){
+    console.log(discount_rule,"discount_rule");
     while(discount_rule.substr(discount_rule.length-1) ==')'){
-        discount_rule = discount_rule.substr(0,discount_rule.length-2);
+        discount_rule = discount_rule.substr(0,discount_rule.length-1);
         console.log(discount_rule,'====================');
     }
+    console.log(discount_rule,"discount_rule");
     var filtered_information = Discount.filter_information(discount_rule);
         if(filtered_information.property_name == 'publish_time'){
             var cart = Discount.filter_publich_time(filtered_information,shopping_cart);
@@ -124,6 +134,8 @@ Discount.filter_last = function(discount_rule,shopping_cart){
 };
 
 Discount.filter_publich_time = function(filtered_information,shopping_cart){
+    console.log('jjjjj');
+    console.log(shopping_cart);
     var year = filtered_information.property_value.substr(6),
         month = filtered_information.property_value.substr(3,2),
         day = filtered_information.property_value.substr(0,2),
@@ -179,11 +191,25 @@ Discount.only_or = function (discount_rule,shopping_cart){
             console.log(cart);
         }
        }else{
+            console.log(discount_rule,shopping_cart)
             var cart = Discount.filter_last(discount_rule,shopping_cart);
             discount_rule = '';
+            console.log('cart',cart)
         }
-        car.push(cart);
+        if(_.isArray(cart)){
+            _.each(cart,function(carts){
+                car.push(carts);
+            })
+        }else{
+            car.push(cart);
+        }
         console.log(car);
     }
     return {discount_rule:discount_rule,shopping_cart:car}
 };
+Discount.delete_last = function(discount_rule){
+    while(discount_rule.substr(discount_rule.length-1) ==')'){
+        discount_rule = discount_rule.substr(0,discount_rule.length-1);
+    }
+    return discount_rule
+}
