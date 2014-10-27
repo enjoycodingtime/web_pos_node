@@ -4,12 +4,13 @@ function Discount(){
 
 Discount.filter = function(shopping_cart,discount_rule){
     discount_rule = Discount.format(discount_rule);
-    var shopping_cart = Discount.filter_rule(discount_rule,shopping_cart);
+    var shopping_cart = Discount.filter_rule(discount_rule,shopping_cart,shopping_cart);
     return shopping_cart;
 };
 
-Discount.filter_rule = function (discount_rule,shopping_cart) {
+Discount.filter_rule = function (discount_rule,complete_rule,shopping_cart) {
     if(discount_rule.length == 0){
+        console.log(discount_rule,shopping_cart);
         if(!_.isArray(shopping_cart)){
             var new_array = [];
             new_array[0] = shopping_cart;
@@ -20,13 +21,13 @@ Discount.filter_rule = function (discount_rule,shopping_cart) {
     var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/,reg3 = /&&/g,reg4 = /\|\|/g;
     if(!reg3.exec(discount_rule) && reg4.exec(discount_rule)){
         console.log('-------------')
-        var back = Discount.only_or(discount_rule,shopping_cart);
+        var back = Discount.only_or(discount_rule,complete_rule,shopping_cart);
         discount_rule = back.discount_rule;
         shopping_cart = back.shopping_cart;
-        return Discount.filter_rule(discount_rule,shopping_cart);
+        return Discount.filter_rule(discount_rule,complete_rule,shopping_cart);
     }else{
         while(reg.exec(discount_rule)){
-            var back = Discount.filter_or_and(discount_rule,shopping_cart);
+            var back = Discount.filter_or_and(discount_rule,complete_rule,shopping_cart);
             discount_rule = back.discount_rule;
             shopping_cart = back.shopping_cart;
         };
@@ -35,7 +36,7 @@ Discount.filter_rule = function (discount_rule,shopping_cart) {
             shopping_cart = Discount.filter_last(discount_rule,shopping_cart);
             discount_rule = '';
         }
-        return Discount.filter_rule(discount_rule,shopping_cart);
+        return Discount.filter_rule(discount_rule,complete_rule,shopping_cart);
     }
 
 
@@ -51,7 +52,7 @@ Discount.format = function (discount_rule) {
     return rs;
 };
 
-Discount.filter_or_and = function (discount_rule,shopping_cart) {
+Discount.filter_or_and = function (discount_rule,complete_rule,shopping_cart) {
     var reg =/(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
     var result = reg.exec(discount_rule);
     var cuted_rule = discount_rule.substr(0,result.index);
@@ -71,10 +72,10 @@ Discount.filter_or_and = function (discount_rule,shopping_cart) {
         obj[filtered_rule.property_name] = filtered_rule.property_value;
         var cart = _(shopping_cart).where(obj);
         console.log(obj,"obj",shopping_cart,cart)
-        console.log(cart);
+        console.log(complete_rule);
     }
     if(result[0] == '||' && reg.exec(discount_rule)){
-        var or = Discount.filter_or_and(discount_rule,shopping_cart);
+        var or = Discount.filter_or_and(discount_rule,complete_rule,shopping_cart);
         discount_rule = or.discount_rule;
         console.log(or.shopping_cart);
         console.log(cart);
@@ -86,7 +87,7 @@ Discount.filter_or_and = function (discount_rule,shopping_cart) {
     }
 
     else if(result[0] == '||' && !reg.exec(discount_rule)){
-        var last = Discount.filter_last(discount_rule,shopping_cart);
+        var last = Discount.filter_last(discount_rule,complete_rule);
         discount_rule = '';
         cart.push(last);
         console.log(cart);
@@ -114,6 +115,7 @@ Discount.filter_information = function(cuted_rule){
 
 Discount.filter_last = function(discount_rule,shopping_cart){
     console.log(discount_rule,"discount_rule");
+    console.log(shopping_cart);
     while(discount_rule.substr(discount_rule.length-1) ==')'){
         discount_rule = discount_rule.substr(0,discount_rule.length-1);
         console.log(discount_rule,'====================');
@@ -169,9 +171,10 @@ Discount.filter_publich_time = function(filtered_information,shopping_cart){
             }
         }
     });
-    return cart;
+    console.log(cart)
+    return cart[0];
 };
-Discount.only_or = function (discount_rule,shopping_cart){
+Discount.only_or = function (discount_rule,complete_rule,shopping_cart){
 
     var reg =/\|\|/,reg2 = /(==)|<|>|(<=)|(>=)/;
     var car = [];

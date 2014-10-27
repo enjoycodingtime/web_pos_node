@@ -44,6 +44,6 @@ Discount_rule.get_rule14 = function() {
 Discount_rule.get_rule11 = function() {
     return "(name=='mx4'||category ==水果)";
 };
-Discount_rule.get_rule12 = function() {
-    return "(name=='mx4'||category ==水果)&&publish_time>11/11/2014";
-};
+//Discount_rule.get_rule12 = function() {
+//    return "(name=='mx4'||category ==水果)&&publish_time>11/11/2014";
+//};
