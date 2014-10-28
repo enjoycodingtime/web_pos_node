@@ -39,7 +39,7 @@ Discount_rule.get_rule13 = function() {
     return "(name=='苹果'||(name=='香蕉'&&category ==水果))&&publish_time==11/12/2014";
 };
 Discount_rule.get_rule14 = function() {
-    return "(name=='苹果'&&(name=='香蕉'&&category ==水果))||publish_time==11/12/2014";
+    return "((name=='苹果'||name=='香蕉')&&category ==水果))||(name==mx4&&unitPrice=='1799'))";
 };
 Discount_rule.get_rule11 = function() {
     return "(name=='mx4'||category ==水果)";

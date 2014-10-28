@@ -33,6 +33,7 @@ Shopping_cart.get_cart = function(){
           promotion: 'undefined',
           publish_time:'11/12/2014',
           num: 6 },
+
       { category: '手机',
           name: 'mx4',
           unitPrice: '1799',
