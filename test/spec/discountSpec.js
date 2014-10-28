@@ -190,5 +190,5 @@ describe ("Discount",function(){
 //                promotion: 'undefined',
 //                publish_time:'11/12/2014',
 //                num: 6 }]);
-    }) ;
+//    }) ;
 });

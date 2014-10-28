@@ -67,6 +67,7 @@ New_Discount.format = function (discount_rule) {
 };
 //过滤出符合规则的商品
 New_Discount.filter_cart = function (cuted_rule,unchanged_cart){
+    console.log(cuted_rule,unchanged_cart);
     var reg1 = /\|\|/,reg2 = /&&/,result;
     if(cuted_rule.substr(0,1) == '('){
         cuted_rule = cuted_rule.substr(1);
@@ -78,26 +79,34 @@ New_Discount.filter_cart = function (cuted_rule,unchanged_cart){
         result = reg1.exec(cuted_rule);
         var str1 = cuted_rule.substr(0,result.index);
         var str2 = cuted_rule.substr(result.index+2);
+        var car1 = New_Discount.filter_information(str1,unchanged_cart);
+        var car2 = New_Discount.filter_information(str2,unchanged_cart);
+        console.log(str1,str2,car1,car2,_.union(car1,car2));
+        return _.union(car1,car2);
     }
 };
 //获得符合指定规则的商品
 New_Discount.filter_information = function(cuted_rule,cart){
-    reg = /(==)|<|>|(<=)|(>=)/;
+    var reg = /(==)|<|>|(<=)|(>=)/;
     var operator_index= reg.exec(cuted_rule).index,
         operator = reg.exec(cuted_rule)[0],
         filtered_rule = {};
     filtered_rule.operator = operator[0];
     filtered_rule.property_name = cuted_rule.substr(0,operator_index);
     filtered_rule.property_value = cuted_rule.substr(operator_index+operator.length);
-    return New_Discount(filtered_rule,cart);
+    console.log(filtered_rule);
+    return New_Discount.get_information(filtered_rule,cart);
 };
 New_Discount.get_information = function (filtered_rule,cart){
     var obj = {};
     obj[filtered_rule.property_name] = filtered_rule.property_value;
     var car;
+    console.log(obj,cart,filtered_rule.operator);
     switch(filtered_rule.operator) {
-        case '==':
+        case '=':
+            console.log('-----------');
             car = _.where(cart,obj);
+            console.log(car);
             break;
         case '<':
             car = _.filter(cart,function(item){
