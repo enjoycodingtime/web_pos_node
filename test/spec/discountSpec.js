@@ -1,7 +1,7 @@
 describe ("Discount",function(){
 
     it("should be return discounted_shopping_cart when called filter",function(){
-        console.log(New_Discount.filter(Discount_rule.get_rule7(),Shopping_cart.get_cart()))
+        console.log(New_Discount.filter(Discount_rule.get_rule12(),Shopping_cart.get_cart()))
 //        expect(New_Discount.filter(Discount_rule.get_rule7(),Shopping_cart.get_cart())).toEqual([
 //            { category: '水果',
 //                name: '苹果',

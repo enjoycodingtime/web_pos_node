@@ -8,25 +8,19 @@ function New_Discount(){
 New_Discount.filter  = function (rule,cart){
     var filtered_cart =[];
     rule = New_Discount.format(rule);
-    console.log(rule,cart);
     return New_Discount.remove_brackets(rule,cart,filtered_cart);
 };
 //去掉最里面的括号
 New_Discount.remove_brackets = function(rule,unchanged_cart,filtered_cart){
-    console.log(rule,unchanged_cart,filtered_cart);
     var reg = /(\|\|)|(&&)/g,reg2 = /(==)|<|>|(<=)|(>=)/;
 
     if(New_Discount.contain_brackets(rule)==-1 && !reg2.exec(rule)){
         if(rule.length == 0){
-            console.log('test');
-            console.log(filtered_cart);
             return _.flatten(filtered_cart);
         }else{
             if(reg2.exec(rule)){
 //                filtered_cart = New_Discount.filter_information(rule,unchanged_cart)
             }
-            console.log(filtered_cart,'-----',rule);
-            console.log(reg.exec(rule));
 
             var result;
 
@@ -41,7 +35,6 @@ New_Discount.remove_brackets = function(rule,unchanged_cart,filtered_cart){
                     filtered_cart.splice(0,2,new_car);
                 }
             }
-            console.log(filtered_cart,'--+++++---',rule);
             return _.flatten(filtered_cart);
 
         }
@@ -49,18 +42,14 @@ New_Discount.remove_brackets = function(rule,unchanged_cart,filtered_cart){
         var min_rule = New_Discount.get_min_rule(rule);
         var cuted_rule = min_rule.cuted_rule;
         rule = min_rule.rule;
-        console.log(rule,"rule",cuted_rule,"cuted_rule");
         if(New_Discount.check_index_of_barckets(cuted_rule)){
-            console.log(cuted_rule,'-----');
             cuted_rule = New_Discount.remove_first_or_last_barckets(cuted_rule);
-            console.log(cuted_rule);
             filtered_cart = New_Discount.filter_part_of_barckets(cuted_rule,unchanged_cart,filtered_cart);
 
         }else{
 
             var cart = New_Discount.filter_cart(cuted_rule,unchanged_cart);
             filtered_cart.push(cart);
-            console.log(cuted_rule,rule.length);
         }
     }
     return New_Discount.remove_brackets(rule,unchanged_cart,filtered_cart);
@@ -108,7 +97,6 @@ New_Discount.format = function (discount_rule) {
 };
 //过滤出符合规则的商品
 New_Discount.filter_cart = function (cuted_rule,unchanged_cart){
-    console.log(cuted_rule,unchanged_cart);
     var reg1 = /\|\|/,reg2 = /&&/,result;
     cuted_rule = New_Discount.remove_first_or_last_barckets(cuted_rule);
     if(reg1.exec(cuted_rule)){
@@ -122,14 +110,22 @@ New_Discount.filter_cart = function (cuted_rule,unchanged_cart){
 };
 //获得符合指定规则的商品
 New_Discount.filter_information = function(cuted_rule,cart){
-    var reg = /(==)|<|>|(<=)|(>=)/;
-    var operator_index= reg.exec(cuted_rule).index,
-        operator = reg.exec(cuted_rule)[0],
-        filtered_rule = {};
-    filtered_rule.operator = operator[0];
-    filtered_rule.property_name = cuted_rule.substr(0,operator_index);
-    filtered_rule.property_value = cuted_rule.substr(operator_index+operator.length);
-    console.log(filtered_rule);
+    var reg = /(==)|<|>/,reg2 = /(<=)|(>=)/;
+    if(reg2.exec(cuted_rule)){
+        var operator_index= reg.exec(cuted_rule).index,
+            operator = reg.exec(cuted_rule)[0],
+            filtered_rule = {};
+        filtered_rule.operator = operator[0]+'=';
+        filtered_rule.property_name = cuted_rule.substr(0,operator_index);
+        filtered_rule.property_value = cuted_rule.substr(operator_index+2);
+    }else{
+        var operator_index= reg.exec(cuted_rule).index,
+            operator = reg.exec(cuted_rule)[0],
+            filtered_rule = {};
+        filtered_rule.operator = operator[0];
+        filtered_rule.property_name = cuted_rule.substr(0,operator_index);
+        filtered_rule.property_value = cuted_rule.substr(operator_index+1);
+    }
     return New_Discount.get_information(filtered_rule,cart);
 };
 //检查规则的‘||’或‘&&’符号是不是在最前或最后
@@ -145,43 +141,60 @@ New_Discount.check_index_of_barckets = function(cuted_rule){
 New_Discount.get_information = function (filtered_rule,cart){
     var obj = {};
     obj[filtered_rule.property_name] = filtered_rule.property_value;
-    var car;
-    console.log(obj,cart,filtered_rule.operator);
     switch(filtered_rule.operator) {
         case '=':
-            console.log('-----------');
             car = _.where(cart,obj);
-            console.log(car);
             break;
         case '<':
-            car = _.filter(cart,function(item){
-                if(parseInt(item[filtered_rule.property_name])<parseInt(filtered_rule.property_value)){
-                    return item;
-                }
-            });
+            if(filtered_rule.property_name == 'publish_time'){
+                car = New_Discount.filter_publich_time(filtered_rule,cart);
+            }else{
+
+                car = _.filter(cart,function(item){
+                    if(parseInt(item[filtered_rule.property_name])<parseInt(filtered_rule.property_value)){
+                        return item;
+                    }
+                });
+            }
             break;
         case '>':
-            car = _.filter(cart,function(item){
-                if(parseInt(item[filtered_rule.property_name])>parseInt(filtered_rule.property_value)){
-                    return item;
-                }
-            });
+            if(filtered_rule.property_name == 'publish_time'){
+                car = New_Discount.filter_publich_time(filtered_rule,cart);
+            }else{
+
+                car = _.filter(cart,function(item){
+                    if(parseInt(item[filtered_rule.property_name])>parseInt(filtered_rule.property_value)){
+                        return item;
+                    }
+                });
+            }
             break;
         case '<=':
+            if(filtered_rule.property_name == 'publish_time'){
+                car = New_Discount.filter_publich_time(filtered_rule,cart);
+            }else{
+
+            }
             car = _.filter(cart,function(item){
                 if(parseInt(item[filtered_rule.property_name])<=parseInt(filtered_rule.property_value)){
                     return item;
                 }
             });
         case '>=':
-            car = _.filter(cart,function(item){
-                if(parseInt(item[filtered_rule.property_name])>=parseInt(filtered_rule.property_value)){
-                    return item;
-                }
-            });
+            if(filtered_rule.property_name == 'publish_time'){
+                car = New_Discount.filter_publich_time(filtered_rule,cart);
+            }else{
+
+                car = _.filter(cart,function(item){
+                    if(parseInt(item[filtered_rule.property_name])>=parseInt(filtered_rule.property_value)){
+                        return item;
+                    }
+                });
+            }
             break;
     };
-    console.log(car);
+    obj[filtered_rule.property_name] = filtered_rule.property_value;
+    var car;
     return car;
 };
 
@@ -200,14 +213,12 @@ New_Discount.filter_part_of_barckets = function(cuted_rule,unchanged_cart,filter
     var reg = /(\|\|)|(&&)/;
     var result = reg.exec(cuted_rule);
     if(result[0] == '||'){
-        console.log('++++++++++++++')
         if(result.index == 0){
             cuted_rule = cuted_rule.substr(2);
         }else{
             cuted_rule = cuted_rule.substr(0,cuted_rule.length-2)
         }
         var car = New_Discount.filter_information(cuted_rule,unchanged_cart);
-        console.log(cuted_rule,car,filtered_cart);
         filtered_cart[filtered_cart.length-1] = _.union(car,filtered_cart[filtered_cart.length-1]);
     }
     if(result[0] == '&&'){
@@ -230,7 +241,6 @@ New_Discount.filter_or = function(cuted_rule,cart){
         if(result){
             var str1 = cuted_rule.substr(0,result.index);
             cuted_rule = cuted_rule.substr(result.index+2);
-            console.log(str1,cuted_rule);
             var car1 = New_Discount.filter_information(str1,cart);
         }else{
             var car1 = New_Discount.filter_information(cuted_rule,cart);
@@ -247,7 +257,6 @@ New_Discount.filter_and = function(cuted_rule,cart){
         if(result){
             var str1 = cuted_rule.substr(0,result.index);
             cuted_rule = cuted_rule.substr(result.index+2);
-            console.log(str1,cuted_rule);
             var car1 = New_Discount.filter_information(str1,cart);
         }else{
             var car1 = New_Discount.filter_information(cuted_rule,cart);
@@ -256,4 +265,56 @@ New_Discount.filter_and = function(cuted_rule,cart){
         car = _.intersection(car,car1);
     }
     return car;
+};
+
+//过滤时间
+New_Discount.filter_publich_time = function(filtered_information,shopping_cart){
+    var year = parseInt(filtered_information.property_value.substr(6)),
+        month = parseInt(filtered_information.property_value.substr(3,2)),
+        day = parseInt(filtered_information.property_value.substr(0,2)),
+        operator = (filtered_information.operator);
+
+    var cart = _(shopping_cart).filter(function(cart){
+        var y = parseInt(cart.publish_time.substr(6)),
+            m = parseInt(cart.publish_time.substr(3,2)),
+            d = parseInt(cart.publish_time.substr(0,2));
+        if(operator === '<'){
+            if(y<year){
+                return cart;
+            }else if(y == year && m<month){
+                return cart;
+            }else if(y == year &&m == month && d<day){
+                return cart;
+            }
+        }
+        if(operator == '>'){
+            if(y>year){
+                return cart;
+            }else if(y == year && m>month){
+                return cart;
+            }else if(y == year &&m == month && d>day){
+                return cart;
+            }
+        }
+        if(operator === '<='){
+            if(y<year){
+                return cart;
+            }else if(y == year && m<month){
+                return cart;
+            }else if(y == year &&m == month && d<=day){
+                return cart;
+            }
+        }
+        if(operator === '>='){
+            if(y>year){
+                return cart;
+            }else if(y == year && m>month){
+                return cart;
+            }else if(y == year &&m == month && d>=day){
+                return cart;
+            }
+        }
+
+    });
+    return cart;
 };
