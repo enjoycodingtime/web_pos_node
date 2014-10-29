@@ -13,7 +13,8 @@ New_Discount.filter  = function (rule,cart){
 };
 //去掉最里面的括号
 New_Discount.remove_brackets = function(rule,unchanged_cart,filtered_cart){
-    var reg = /(\|\|)|(&&)/,reg2 = /(==)|<|>|(<=)|(>=)/;
+    console.log(rule,unchanged_cart,filtered_cart);
+    var reg = /(\|\|)|(&&)/g,reg2 = /(==)|<|>|(<=)|(>=)/;
 
     if(New_Discount.contain_brackets(rule)==-1 && !reg2.exec(rule)){
         if(rule.length == 0){
@@ -22,8 +23,13 @@ New_Discount.remove_brackets = function(rule,unchanged_cart,filtered_cart){
             return _.flatten(filtered_cart);
         }else{
             if(reg2.exec(rule)){
-
+//                filtered_cart = New_Discount.filter_information(rule,unchanged_cart)
             }
+            console.log(filtered_cart,'-----',rule);
+            console.log(reg.exec(rule));
+
+            var result;
+
             while((result = reg.exec(rule)) != null)  {
 //                index = result.index;
                 if(result[0] == '||'){
@@ -35,21 +41,26 @@ New_Discount.remove_brackets = function(rule,unchanged_cart,filtered_cart){
                     filtered_cart.splice(0,2,new_car);
                 }
             }
-            return filtered_cart;
+            console.log(filtered_cart,'--+++++---',rule);
+            return _.flatten(filtered_cart);
 
         }
     }else{
         var min_rule = New_Discount.get_min_rule(rule);
         var cuted_rule = min_rule.cuted_rule;
         rule = min_rule.rule;
+        console.log(rule,"rule",cuted_rule,"cuted_rule");
         if(New_Discount.check_index_of_barckets(cuted_rule)){
+            console.log(cuted_rule,'-----');
+            cuted_rule = New_Discount.remove_first_or_last_barckets(cuted_rule);
+            console.log(cuted_rule);
             filtered_cart = New_Discount.filter_part_of_barckets(cuted_rule,unchanged_cart,filtered_cart);
 
         }else{
 
             var cart = New_Discount.filter_cart(cuted_rule,unchanged_cart);
             filtered_cart.push(cart);
-            console.log(cuted_rule,rule.length,_.flatten(filtered_cart[0]),filtered_cart[0]);
+            console.log(cuted_rule,rule.length);
         }
     }
     return New_Discount.remove_brackets(rule,unchanged_cart,filtered_cart);
@@ -101,22 +112,11 @@ New_Discount.filter_cart = function (cuted_rule,unchanged_cart){
     var reg1 = /\|\|/,reg2 = /&&/,result;
     cuted_rule = New_Discount.remove_first_or_last_barckets(cuted_rule);
     if(reg1.exec(cuted_rule)){
-        result = reg1.exec(cuted_rule);
-        var str1 = cuted_rule.substr(0,result.index);
-        var str2 = cuted_rule.substr(result.index+2);
-        console.log(str1,str2);
-        var car1 = New_Discount.filter_information(str1,unchanged_cart);
-        var car2 = New_Discount.filter_information(str2,unchanged_cart);
-        return _.union(car1,car2);
+        return New_Discount.filter_or(cuted_rule,unchanged_cart);
     }
+
     if(reg2.exec(cuted_rule)){
-        result = reg2.exec(cuted_rule);
-        var str1 = cuted_rule.substr(0,result.index);
-        var str2 = cuted_rule.substr(result.index+2);
-        console.log(str1,str2,car1,car2);
-        var car1 = New_Discount.filter_information(str1,unchanged_cart);
-        var car2 = New_Discount.filter_information(str2,unchanged_cart);
-        return _.intersection(car1,car2);
+        return New_Discount.filter_and(cuted_rule,unchanged_cart);
     }
     return New_Discount.filter_information(cuted_rule,unchanged_cart);
 };
@@ -155,27 +155,27 @@ New_Discount.get_information = function (filtered_rule,cart){
             break;
         case '<':
             car = _.filter(cart,function(item){
-                if(item[filtered_rule.property_name]<filtered_rule.property_value){
+                if(parseInt(item[filtered_rule.property_name])<parseInt(filtered_rule.property_value)){
                     return item;
                 }
             });
             break;
         case '>':
             car = _.filter(cart,function(item){
-                if(item[filtered_rule.property_name]>filtered_rule.property_value){
+                if(parseInt(item[filtered_rule.property_name])>parseInt(filtered_rule.property_value)){
                     return item;
                 }
             });
             break;
         case '<=':
             car = _.filter(cart,function(item){
-                if(item[filtered_rule.property_name]<=filtered_rule.property_value){
+                if(parseInt(item[filtered_rule.property_name])<=parseInt(filtered_rule.property_value)){
                     return item;
                 }
             });
         case '>=':
             car = _.filter(cart,function(item){
-                if(item[filtered_rule.property_name]>=filtered_rule.property_value){
+                if(parseInt(item[filtered_rule.property_name])>=parseInt(filtered_rule.property_value)){
                     return item;
                 }
             });
@@ -199,16 +199,18 @@ New_Discount.remove_first_or_last_barckets = function(cuted_rule){
 New_Discount.filter_part_of_barckets = function(cuted_rule,unchanged_cart,filtered_cart){
     var reg = /(\|\|)|(&&)/;
     var result = reg.exec(cuted_rule);
-    if(result == '||'){
+    if(result[0] == '||'){
+        console.log('++++++++++++++')
         if(result.index == 0){
             cuted_rule = cuted_rule.substr(2);
         }else{
             cuted_rule = cuted_rule.substr(0,cuted_rule.length-2)
         }
         var car = New_Discount.filter_information(cuted_rule,unchanged_cart);
+        console.log(cuted_rule,car,filtered_cart);
         filtered_cart[filtered_cart.length-1] = _.union(car,filtered_cart[filtered_cart.length-1]);
     }
-    if(result == '&&'){
+    if(result[0] == '&&'){
         if(result.index == 0){
             cuted_rule = cuted_rule.substr(2);
         }else{
@@ -219,4 +221,39 @@ New_Discount.filter_part_of_barckets = function(cuted_rule,unchanged_cart,filter
     }
     return filtered_cart;
 
-}
+};
+//过滤n个'||'
+New_Discount.filter_or = function(cuted_rule,cart){
+    var car = [],reg1 = /\|\|/,result;
+    while(cuted_rule.length !=0){
+        result = reg1.exec(cuted_rule);
+        if(result){
+            var str1 = cuted_rule.substr(0,result.index);
+            cuted_rule = cuted_rule.substr(result.index+2);
+            console.log(str1,cuted_rule);
+            var car1 = New_Discount.filter_information(str1,cart);
+        }else{
+            var car1 = New_Discount.filter_information(cuted_rule,cart);
+            cuted_rule = '';
+        }
+        car = _.union(car,car1);
+    }
+    return car;
+};
+New_Discount.filter_and = function(cuted_rule,cart){
+    var car = cart,reg1 = /&&/,result;
+    while(cuted_rule.length !=0){
+        result = reg1.exec(cuted_rule);
+        if(result){
+            var str1 = cuted_rule.substr(0,result.index);
+            cuted_rule = cuted_rule.substr(result.index+2);
+            console.log(str1,cuted_rule);
+            var car1 = New_Discount.filter_information(str1,cart);
+        }else{
+            var car1 = New_Discount.filter_information(cuted_rule,cart);
+            cuted_rule = '';
+        }
+        car = _.intersection(car,car1);
+    }
+    return car;
+};
